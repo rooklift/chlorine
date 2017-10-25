@@ -217,7 +217,7 @@
 					context.arc(x, y, r, 0, Math.PI * 2, true);
 					context.fill();
 
-					if (renderer.weapon_ranges) {
+					if (renderer.weapon_ranges && ship.docking.status === "undocked") {
 						context.strokeStyle = colours[parseInt(pid, 10)];
 						context.lineWidth = 1;
 						context.beginPath();
