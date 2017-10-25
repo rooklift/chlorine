@@ -139,62 +139,63 @@
 
 			let frame = renderer.game.frames[renderer.turn];
 
-			let game_planets = renderer.game.planets;
+			let game_planets = renderer.game.planets;		// The planets we're told about at the top-level of the JSON.
 
-			for (let i = 0; i < game_planets.length; i++) {
+			for (let plid in frame.planets) {				// "plid" means planet ID.
 
-				let id = i.toString();
+				// The only legit properties should be planet IDs.
 
-				let planet = frame.planets[id];
+				if (frame.planets.hasOwnProperty(plid) === false) {
+					continue;
+				}
 
-				if (planet) {
+				let planet = frame.planets[plid];
 
-					planet.r = game_planets[i].r;
-					planet.x = game_planets[i].x;
-					planet.y = game_planets[i].y;
+				planet.r = game_planets[plid].r;
+				planet.x = game_planets[plid].x;
+				planet.y = game_planets[plid].y;
 
-					let x = planet.x * renderer.scale;
-					let y = planet.y * renderer.scale;
-					let r = planet.r * renderer.scale;
+				let x = planet.x * renderer.scale;
+				let y = planet.y * renderer.scale;
+				let r = planet.r * renderer.scale;
 
-					if (planet.owner === null) {
-						context.strokeStyle = "gray";
-					} else {
-						context.strokeStyle = colours[parseInt(planet.owner, 10)];
-					}
+				if (planet.owner === null) {
+					context.strokeStyle = "gray";
+				} else {
+					context.strokeStyle = colours[parseInt(planet.owner, 10)];
+				}
 
-					context.lineWidth = 2;
+				context.lineWidth = 2;
+				context.beginPath();
+				context.arc(x, y, r, 0, Math.PI * 2, true);
+				context.stroke();
+
+				if (renderer.docking_ranges) {
+					context.lineWidth = 1;
 					context.beginPath();
-					context.arc(x, y, r, 0, Math.PI * 2, true);
+					context.arc(x, y, r + 4 * renderer.scale, 0, Math.PI * 2, true);
 					context.stroke();
+				}
 
-					if (renderer.docking_ranges) {
+				if (planet.docked_ships.length > 0) {
+
+					for (let n = 0; n < planet.docked_ships.length; n++) {
+
+						let sid = planet.docked_ships[n];
+
+						let ship = frame.ships[planet.owner.toString()][sid.toString()];
+
+						let x1 = ship.x * renderer.scale;
+						let y1 = ship.y * renderer.scale;
+						let x2 = planet.x * renderer.scale;
+						let y2 = planet.y * renderer.scale;
+
 						context.lineWidth = 1;
+						context.strokeStyle = "white";
 						context.beginPath();
-						context.arc(x, y, r + 4 * renderer.scale, 0, Math.PI * 2, true);
+						context.moveTo(x1, y1);
+						context.lineTo(x2, y2);
 						context.stroke();
-					}
-
-					if (planet.docked_ships.length > 0) {
-
-						for (let n = 0; n < planet.docked_ships.length; n++) {
-
-							let sid = planet.docked_ships[n];
-
-							let ship = frame.ships[planet.owner.toString()][sid.toString()];
-
-							let x1 = ship.x * renderer.scale;
-							let y1 = ship.y * renderer.scale;
-							let x2 = planet.x * renderer.scale;
-							let y2 = planet.y * renderer.scale;
-
-							context.lineWidth = 1;
-							context.strokeStyle = "white";
-							context.beginPath();
-							context.moveTo(x1, y1);
-							context.lineTo(x2, y2);
-							context.stroke();
-						}
 					}
 				}
 			}
@@ -204,37 +205,39 @@
 
 			let frame = renderer.game.frames[renderer.turn];
 
-			for (let i = 0; i < 4; i++) {
+			for (let pid in frame.ships) {
 
-				let pid = i.toString();
+				// The only legit properties should be player IDs.
 
-				let player_ships = frame.ships[pid];
+				if (frame.ships.hasOwnProperty(pid) === false) {
+					continue;
+				}
 
-				if (player_ships) {
+				for (let sid in frame.ships[pid]) {
 
-					for (let key in player_ships) {
+					// The only legit properties should be ship IDs.
 
-						if (player_ships.hasOwnProperty(key)) {
+					if (frame.ships[pid].hasOwnProperty(sid) === false) {
+						continue;
+					}
 
-							let ship = player_ships[key];
+					let ship = frame.ships[pid][sid];
 
-							let x = ship.x * renderer.scale;
-							let y = ship.y * renderer.scale;
-							let r = 0.5 * renderer.scale;
+					let x = ship.x * renderer.scale;
+					let y = ship.y * renderer.scale;
+					let r = 0.5 * renderer.scale;
 
-							context.fillStyle = colours[i];
-							context.beginPath();
-							context.arc(x, y, r, 0, Math.PI * 2, true);
-							context.fill();
+					context.fillStyle = colours[parseInt(pid, 10)];
+					context.beginPath();
+					context.arc(x, y, r, 0, Math.PI * 2, true);
+					context.fill();
 
-							if (renderer.weapon_ranges) {
-								context.strokeStyle = colours[i];
-								context.lineWidth = 1;
-								context.beginPath();
-								context.arc(x, y, 5 * renderer.scale, 0, Math.PI * 2, true);
-								context.stroke();
-							}
-						}
+					if (renderer.weapon_ranges) {
+						context.strokeStyle = colours[parseInt(pid, 10)];
+						context.lineWidth = 1;
+						context.beginPath();
+						context.arc(x, y, 5 * renderer.scale, 0, Math.PI * 2, true);
+						context.stroke();
 					}
 				}
 			}
