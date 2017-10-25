@@ -58,12 +58,12 @@
 			try {
 
 				let contents = fs.readFileSync(filename);
-				renderer.game = JSON.parse(contents);
+				renderer.game = JSON.parse(contents);			// If the file is compressed, we will have an exception here.
 				renderer.turn = 0;
-				renderer.draw();
+				renderer.draw();			// Opening some random JSON (non-Halite) file will likely cause an exception here.
 				return;
 
-			} catch(err) {}		// Couldn't parse raw, so try as zstd...
+			} catch(err) {}					// Couldn't parse raw, so try as zstd...
 
 			let loading_string = "";
 			let loading_stream = new stream.Writable();
