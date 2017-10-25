@@ -113,6 +113,10 @@
 
 		renderer.draw = () => {
 
+			if (!renderer.game) {
+				return;
+			}
+
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
 
@@ -146,9 +150,9 @@
 					planet.x = game_planets[i].x;
 					planet.y = game_planets[i].y;
 
-					let x = Math.floor(planet.x * renderer.scale);
-					let y = Math.floor(planet.y * renderer.scale);
-					let r = Math.floor(planet.r * renderer.scale);
+					let x = planet.x * renderer.scale;
+					let y = planet.y * renderer.scale;
+					let r = planet.r * renderer.scale;
 
 					if (planet.owner === null) {
 						context.strokeStyle = "gray";
@@ -213,9 +217,9 @@
 
 							let ship = player_ships[key];
 
-							let x = Math.floor(ship.x * renderer.scale);
-							let y = Math.floor(ship.y * renderer.scale);
-							let r = Math.floor(1 * renderer.scale);
+							let x = ship.x * renderer.scale;
+							let y = ship.y * renderer.scale;
+							let r = 1 * renderer.scale;
 
 							context.strokeStyle = colours[i];
 

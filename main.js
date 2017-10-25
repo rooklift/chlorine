@@ -68,6 +68,23 @@ function menu_build() {
 						windows.send("forward", -1);
 					}
 				},
+				{
+					type: "separator"
+				},
+				{
+					label: "Move To Start",
+					accelerator: "Home",
+					click: () => {
+						windows.send("forward", -99999);
+					}
+				},
+				{
+					label: "Move To End",
+					accelerator: "End",
+					click: () => {
+						windows.send("forward", 99999);
+					}
+				},
 			]
 		},
 		{
