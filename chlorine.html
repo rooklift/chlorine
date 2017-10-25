@@ -132,7 +132,8 @@
 			renderer.draw_planets();
 			renderer.draw_ships();
 
-			document.title = `${renderer.turn} / ${renderer.game.frames.length - 1}`
+			let turn_string = `${renderer.turn} / ${renderer.game.frames.length - 1}`;
+			document.title = renderer.game.player_names.join(" / ") + " --- " + turn_string;
 		};
 
 		renderer.draw_planets = () => {
