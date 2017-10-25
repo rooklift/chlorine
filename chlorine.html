@@ -151,13 +151,11 @@
 
 				let planet = frame.planets[plid];
 
-				planet.r = game_planets[plid].r;
-				planet.x = game_planets[plid].x;
-				planet.y = game_planets[plid].y;
+				// The planet doesn't contain x, y, radius; we can get it from the game_planets....
 
-				let x = planet.x * renderer.scale;
-				let y = planet.y * renderer.scale;
-				let r = planet.r * renderer.scale;
+				let x = game_planets[plid].x * renderer.scale;
+				let y = game_planets[plid].y * renderer.scale;
+				let r = game_planets[plid].r * renderer.scale;
 
 				if (planet.owner === null) {
 					context.strokeStyle = "gray";
