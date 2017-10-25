@@ -265,6 +265,8 @@
 
 	window.addEventListener("resize", () => renderer.draw());
 
+	ipcRenderer.send("renderer_ready", null);
+
 </script>
 </body>
 </html>

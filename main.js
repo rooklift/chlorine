@@ -1,17 +1,38 @@
 "use strict";
 
-const electron = require("electron");
-const windows = require("./modules/windows");
 const alert = require("./modules/alert");
+const electron = require("electron");
+const ipcMain = require("electron").ipcMain;
+const windows = require("./modules/windows");
+
+// -------------------------------------------------------
 
 electron.app.on("ready", () => {
-	windows.new({width: 1200, height: 800, page: "chlorine.html"});
+	windows.new({width: 1200, height: 800, resizable: true, page: "chlorine.html"});
 	menu_build();
 });
 
 electron.app.on("window-all-closed", () => {
 	electron.app.quit();
 });
+
+// -------------------------------------------------------
+
+// Load a file via command line with -o filename.
+
+ipcMain.on("renderer_ready", () => {
+	let filename = "";
+	for (let i = 0; i < process.argv.length - 1; i++) {
+		if (process.argv[i] === "-o") {
+			filename = process.argv[i + 1]
+		}
+	}
+	if (filename !== "") {
+		windows.send("open", filename);
+	}
+});
+
+// -------------------------------------------------------
 
 function menu_build() {
 	const template = [
