@@ -184,15 +184,13 @@
 
 						let ship = frame.ships[planet.owner.toString()][sid.toString()];
 
-						let x1 = ship.x * renderer.scale;
-						let y1 = ship.y * renderer.scale;
-						let x2 = planet.x * renderer.scale;
-						let y2 = planet.y * renderer.scale;
+						let x2 = ship.x * renderer.scale;
+						let y2 = ship.y * renderer.scale;
 
 						context.lineWidth = 1;
 						context.strokeStyle = "white";
 						context.beginPath();
-						context.moveTo(x1, y1);
+						context.moveTo(x, y);
 						context.lineTo(x2, y2);
 						context.stroke();
 					}
