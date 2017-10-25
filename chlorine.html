@@ -12,7 +12,7 @@
 			pointer-events: none;
 			user-select: none;
 			cursor: default;
-			overflow: hidden;		/* avoids out by one issues relating to DPI and zoom etc */
+			overflow: hidden;
 		}
 	</style>
 </head>
@@ -29,12 +29,19 @@
 	const stream = require("stream");
 	const zstd = require("node-zstandard");
 
+	const canvas = document.getElementById("canvas");
+	const context = canvas.getContext("2d");
+
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+
 	function make_renderer() {
 
 		let renderer = {};
 
 		renderer.game = null;
 		renderer.turn = 0;
+		renderer.scale = 0;
 
 		renderer.open = (filename) => {
 
@@ -56,6 +63,8 @@
 				result.on("finish", () => {
 					renderer.game = JSON.parse(loading_string);
 					renderer.turn = 0;
+					renderer.scale = canvas.width / renderer.game.width
+					renderer.draw();
 				});
 			});
 		};
@@ -67,6 +76,87 @@
 			}
 
 			fs.writeFileSync(filename, JSON.stringify(renderer.game, null, "\t"));
+		};
+
+		renderer.draw = () => {
+			renderer.draw_planets();
+			renderer.draw_ships();
+		};
+
+		renderer.draw_planets = () => {
+
+			let index = renderer.turn;
+
+			if (index >= renderer.game.frames.length) {
+				index = renderer.game.frames.length - 1;
+			}
+
+			let frame = renderer.game.frames[index];
+
+			let game_planets = renderer.game.planets;
+
+			for (let i = 0; i < game_planets.length; i++) {
+
+				let id = i.toString();
+
+				let planet = frame.planets[id];
+
+				if (planet) {
+
+					planet.r = game_planets[i].r;
+					planet.x = game_planets[i].x;
+					planet.y = game_planets[i].y;
+
+					let x = Math.floor(planet.x * renderer.scale);
+					let y = Math.floor(planet.y * renderer.scale);
+					let r = Math.floor(planet.r * renderer.scale);
+
+					context.lineWidth = 5;
+					context.strokeStyle = "red";
+					context.beginPath();
+					context.arc(x, y, r, 0, Math.PI * 2, true);
+					context.stroke();
+				}
+			}
+		};
+
+		renderer.draw_ships = () => {
+
+			let index = renderer.turn;
+
+			if (index >= renderer.game.frames.length) {
+				index = renderer.game.frames.length - 1;
+			}
+
+			let frame = renderer.game.frames[index];
+
+			for (let i = 0; i < 4; i++) {
+
+				let pid = i.toString();
+
+				let player_ships = frame.ships[pid];
+
+				if (player_ships) {
+
+					for (let key in player_ships) {
+
+						if (player_ships.hasOwnProperty(key)) {
+
+							let ship = player_ships[key];
+
+							let x = Math.floor(ship.x * renderer.scale);
+							let y = Math.floor(ship.y * renderer.scale);
+							let r = Math.floor(1 * renderer.scale);
+
+							context.lineWidth = 2;
+							context.strokeStyle = "white";
+							context.beginPath();
+							context.arc(x, y, r, 0, Math.PI * 2, true);
+							context.stroke();
+						}
+					}
+				}
+			}
 		}
 
 		return renderer;
