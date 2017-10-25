@@ -101,6 +101,7 @@
 			context.clearRect(0, 0, canvas.width, canvas.height);
 			renderer.draw_planets();
 			renderer.draw_ships();
+			document.title = `${renderer.turn + 1} / ${renderer.game.frames.length}`		// Won't use zeroth index
 		};
 
 		renderer.draw_planets = () => {
@@ -132,6 +133,28 @@
 					context.beginPath();
 					context.arc(x, y, r, 0, Math.PI * 2, true);
 					context.stroke();
+
+					if (planet.docked_ships.length > 0) {
+
+						for (let n = 0; n < planet.docked_ships.length; n++) {
+
+							let sid = planet.docked_ships[n];
+
+							let ship = frame.ships[planet.owner.toString()][sid.toString()];
+
+							let x1 = ship.x * renderer.scale;
+							let y1 = ship.y * renderer.scale;
+							let x2 = planet.x * renderer.scale;
+							let y2 = planet.y * renderer.scale;
+
+							context.lineWidth = 1;
+							context.strokeStyle = "white";
+							context.beginPath();
+							context.moveTo(x1, y1);
+							context.lineTo(x2, y2);
+							context.stroke();
+						}
+					}
 				}
 			}
 		};

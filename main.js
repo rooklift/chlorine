@@ -20,6 +20,7 @@ function menu_build() {
 			submenu: [
 				{
 					label: "Open...",
+					accelerator: "CommandOrControl+O",
 					click: () => {
 						let files = electron.dialog.showOpenDialog();
 						if (files.length > 0) {
