@@ -37,9 +37,6 @@
 		"#c5ec98",
 	]
 
-	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight;
-
 	function make_renderer() {
 
 		let renderer = {};
@@ -140,9 +137,7 @@
 
 		renderer.draw_planets = () => {
 
-			let index = renderer.turn;
-
-			let frame = renderer.game.frames[index];
+			let frame = renderer.game.frames[renderer.turn];
 
 			let game_planets = renderer.game.planets;
 
@@ -207,9 +202,7 @@
 
 		renderer.draw_ships = () => {
 
-			let index = renderer.turn;
-
-			let frame = renderer.game.frames[index];
+			let frame = renderer.game.frames[renderer.turn];
 
 			for (let i = 0; i < 4; i++) {
 
