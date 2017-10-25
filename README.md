@@ -9,3 +9,6 @@ electron .
 
 # Dependencies
 * node-zstandard
+
+# Screenshot
+![Chlorine Screenshot](https://raw.githubusercontent.com/fohristiwhirl/chlorine/master/screenshot.png)
