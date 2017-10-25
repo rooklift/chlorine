@@ -78,7 +78,27 @@
 			fs.writeFileSync(filename, JSON.stringify(renderer.game, null, "\t"));
 		};
 
+		renderer.forward = (n) => {
+
+			if (!renderer.game) {
+				return;
+			}
+
+			renderer.turn += n;
+
+			if (renderer.turn < 0) {
+				renderer.turn = 0;
+			}
+
+			if (renderer.turn >= renderer.game.frames.length) {
+				renderer.turn = renderer.game.frames.length - 1;
+			}
+
+			renderer.draw();
+		};
+
 		renderer.draw = () => {
+			context.clearRect(0, 0, canvas.width, canvas.height);
 			renderer.draw_planets();
 			renderer.draw_ships();
 		};
@@ -86,10 +106,6 @@
 		renderer.draw_planets = () => {
 
 			let index = renderer.turn;
-
-			if (index >= renderer.game.frames.length) {
-				index = renderer.game.frames.length - 1;
-			}
 
 			let frame = renderer.game.frames[index];
 
@@ -124,10 +140,6 @@
 
 			let index = renderer.turn;
 
-			if (index >= renderer.game.frames.length) {
-				index = renderer.game.frames.length - 1;
-			}
-
 			let frame = renderer.game.frames[index];
 
 			for (let i = 0; i < 4; i++) {
@@ -157,7 +169,7 @@
 					}
 				}
 			}
-		}
+		};
 
 		return renderer;
 	}
@@ -170,6 +182,10 @@
 
 	ipcRenderer.on("save", (event, filename) => {
 		renderer.save(filename);
+	});
+
+	ipcRenderer.on("forward", (event, n) => {
+		renderer.forward(n);
 	});
 
 </script>

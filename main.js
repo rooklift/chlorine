@@ -61,7 +61,26 @@ function menu_build() {
 					role: "toggledevtools"
 				},
 			]
-		}
+		},
+		{
+			label: "Navigation",
+			submenu: [
+				{
+					label: "Forward",
+					accelerator: "Right",
+					click: () => {
+						windows.send("forward", 1);
+					}
+				},
+				{
+					label: "Back",
+					accelerator: "Left",
+					click: () => {
+						windows.send("forward", -1);
+					}
+				},
+			]
+		},
 	];
 
 	const menu = electron.Menu.buildFromTemplate(template);
