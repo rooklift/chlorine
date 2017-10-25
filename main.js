@@ -5,7 +5,7 @@ const windows = require("./modules/windows");
 const alert = require("./modules/alert");
 
 electron.app.on("ready", () => {
-	windows.new({width: 1600, height: 1100, page: "chlorine.html"});
+	windows.new({width: 1200, height: 800, page: "chlorine.html"});
 	menu_build();
 });
 
@@ -24,6 +24,15 @@ function menu_build() {
 						let files = electron.dialog.showOpenDialog();
 						if (files.length > 0) {
 							windows.send("open", files[0]);
+						}
+					}
+				},
+				{
+					label: "Save decompressed JSON...",
+					click: () => {
+						let outfilename = electron.dialog.showSaveDialog();
+						if (outfilename) {
+							windows.send("save", outfilename);
 						}
 					}
 				},
