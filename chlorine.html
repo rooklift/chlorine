@@ -60,11 +60,11 @@
 
 			} catch(err) {}					// Couldn't parse raw, so try as zstd...
 
-			let loading_string = "";
+			let all_chunks = [];
 			let loading_stream = new stream.Writable();
 
 			loading_stream._write = (chunk, encoding, done) => {
-				loading_string += chunk.toString();
+				all_chunks.push(chunk.toString());
 				done();
 			};
 
@@ -76,7 +76,7 @@
 					alert("Couldn't load this file")
 				});
 				result.on("finish", () => {
-					renderer.game = JSON.parse(loading_string);
+					renderer.game = JSON.parse(all_chunks.join(""));
 					renderer.turn = 0;
 					renderer.draw();
 				});
