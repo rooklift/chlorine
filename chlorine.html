@@ -32,6 +32,13 @@
 	const canvas = document.getElementById("canvas");
 	const context = canvas.getContext("2d");
 
+	const colours = [
+		"#bd00db",
+		"#63ceca",
+		"#ffbe00",
+		"#c5ec98",
+	]
+
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 
@@ -129,7 +136,12 @@
 					let r = Math.floor(planet.r * renderer.scale);
 
 					context.lineWidth = 5;
-					context.strokeStyle = "red";
+
+					if (planet.owner === null) {
+						context.strokeStyle = "gray";
+					} else {
+						context.strokeStyle = colours[parseInt(planet.owner, 10)];
+					}
 					context.beginPath();
 					context.arc(x, y, r, 0, Math.PI * 2, true);
 					context.stroke();
@@ -184,7 +196,7 @@
 							let r = Math.floor(1 * renderer.scale);
 
 							context.lineWidth = 2;
-							context.strokeStyle = "white";
+							context.strokeStyle = colours[i];
 							context.beginPath();
 							context.arc(x, y, r, 0, Math.PI * 2, true);
 							context.stroke();
