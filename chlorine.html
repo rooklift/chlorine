@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chlorine</title>
+	<style>
+		body {
+			margin: 0;
+			border: 0;
+			padding: 0;
+			background-color: black;
+			font-family: "Courier";
+			pointer-events: none;
+			user-select: none;
+			cursor: default;
+			overflow: hidden;		/* avoids out by one issues relating to DPI and zoom etc */
+		}
+	</style>
+</head>
+<body>
+
+<canvas id="canvas" width="0" height="0" style="position: absolute;"></canvas>
+
+<script>
+	"use strict";
+
+	const fs = require("fs");
+	const ipcRenderer = require("electron").ipcRenderer;
+	const stream = require("stream");
+	const zstd = require("node-zstandard");
+
+	function make_renderer() {
+
+		let renderer = {};
+
+		renderer.game = null;
+
+		renderer.open = (filename) => {
+
+			let loading_string = "";
+			let loading_stream = new stream.Writable();
+
+			loading_stream._write = (chunk, encoding, done) => {
+				loading_string += chunk.toString();
+				console.log(loading_string.length);
+				done();
+			};
+
+			zstd.decompressFileToStream(filename, loading_stream, (err, result) => {
+				if (err) {
+					alert("Couldn't load this file")
+				}
+				result.on("error", (err) => {
+					alert("Couldn't load this file")
+				});
+				result.on("finish", () => {
+					alert(loading_string.length);
+				});
+			});
+		};
+
+		return renderer;
+	}
+
+	let renderer = make_renderer();
+
+	ipcRenderer.on("open", (event, filename) => {
+		renderer.open(filename);
+	});
+
+</script>
+</body>
+</html>

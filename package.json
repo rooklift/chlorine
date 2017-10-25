@@ -1,0 +1,8 @@
+{
+	"name"    : "Chlorine",
+	"version" : "0.1.0",
+	"main"    : "main.js",
+	"dependencies": {
+		"node-zstandard": "1.2.4"
+	}
+}
