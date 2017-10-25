@@ -50,6 +50,9 @@
 		renderer.turn = 0;
 		renderer.scale = 0;
 
+		renderer.weapon_ranges = true;
+		renderer.docking_ranges = true;
+
 		renderer.open = (filename) => {
 
 			let loading_string = "";
@@ -103,6 +106,11 @@
 			renderer.draw();
 		};
 
+		renderer.toggle = (varname) => {
+			renderer[varname] = !renderer[varname];
+			renderer.draw();
+		};
+
 		renderer.draw = () => {
 
 			canvas.width = window.innerWidth;
@@ -153,10 +161,12 @@
 					context.arc(x, y, r, 0, Math.PI * 2, true);
 					context.stroke();
 
-					context.lineWidth = 1;
-					context.beginPath();
-					context.arc(x, y, r + 4 * renderer.scale, 0, Math.PI * 2, true);
-					context.stroke();
+					if (renderer.docking_ranges) {
+						context.lineWidth = 1;
+						context.beginPath();
+						context.arc(x, y, r + 4 * renderer.scale, 0, Math.PI * 2, true);
+						context.stroke();
+					}
 
 					if (planet.docked_ships.length > 0) {
 
@@ -214,10 +224,12 @@
 							context.arc(x, y, r, 0, Math.PI * 2, true);
 							context.stroke();
 
-							context.lineWidth = 1;
-							context.beginPath();
-							context.arc(x, y, 5 * renderer.scale, 0, Math.PI * 2, true);
-							context.stroke();
+							if (renderer.weapon_ranges) {
+								context.lineWidth = 1;
+								context.beginPath();
+								context.arc(x, y, 5 * renderer.scale, 0, Math.PI * 2, true);
+								context.stroke();
+							}
 						}
 					}
 				}
@@ -239,6 +251,10 @@
 
 	ipcRenderer.on("forward", (event, n) => {
 		renderer.forward(n);
+	});
+
+	ipcRenderer.on("toggle", (event, varname) => {
+		renderer.toggle(varname);
 	});
 
 	window.addEventListener("resize", () => renderer.draw());

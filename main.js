@@ -70,6 +70,23 @@ function menu_build() {
 				},
 			]
 		},
+		{
+			label: "View",
+			submenu: [
+				{
+					label: "Toggle Weapon Ranges",
+					click: () => {
+						windows.send("toggle", "weapon_ranges");
+					}
+				},
+				{
+					label: "Toggle Docking Ranges",
+					click: () => {
+						windows.send("toggle", "docking_ranges");
+					}
+				},
+			]
+		},
 	];
 
 	const menu = electron.Menu.buildFromTemplate(template);
