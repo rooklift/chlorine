@@ -16,7 +16,7 @@ electron.app.on("window-all-closed", () => {
 function menu_build() {
 	const template = [
 		{
-			label: "Menu",
+			label: "File",
 			submenu: [
 				{
 					label: "Open...",
@@ -39,18 +39,6 @@ function menu_build() {
 				},
 				{
 					type: "separator"
-				},
-				{
-					label: "Zoom out",
-					click: () => {
-						windows.change_zoom(-0.1);
-					}
-				},
-				{
-					label: "Zoom in",
-					click: () => {
-						windows.change_zoom(0.1);
-					}
 				},
 				{
 					role: "quit"

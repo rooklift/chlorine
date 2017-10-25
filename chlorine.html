@@ -33,7 +33,7 @@
 	const context = canvas.getContext("2d");
 
 	const colours = [
-		"#bd00db",
+		"#eeaaee",
 		"#63ceca",
 		"#ffbe00",
 		"#c5ec98",
@@ -70,7 +70,6 @@
 				result.on("finish", () => {
 					renderer.game = JSON.parse(loading_string);
 					renderer.turn = 0;
-					renderer.scale = canvas.width / renderer.game.width
 					renderer.draw();
 				});
 			});
@@ -105,10 +104,18 @@
 		};
 
 		renderer.draw = () => {
+
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+
+			renderer.scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
+
 			context.clearRect(0, 0, canvas.width, canvas.height);
+
 			renderer.draw_planets();
 			renderer.draw_ships();
-			document.title = `${renderer.turn} / ${renderer.game.frames.length}`
+
+			document.title = `${renderer.turn} / ${renderer.game.frames.length - 1}`
 		};
 
 		renderer.draw_planets = () => {
@@ -135,15 +142,20 @@
 					let y = Math.floor(planet.y * renderer.scale);
 					let r = Math.floor(planet.r * renderer.scale);
 
-					context.lineWidth = 5;
-
 					if (planet.owner === null) {
 						context.strokeStyle = "gray";
 					} else {
 						context.strokeStyle = colours[parseInt(planet.owner, 10)];
 					}
+
+					context.lineWidth = 2;
 					context.beginPath();
 					context.arc(x, y, r, 0, Math.PI * 2, true);
+					context.stroke();
+
+					context.lineWidth = 1;
+					context.beginPath();
+					context.arc(x, y, r + 4 * renderer.scale, 0, Math.PI * 2, true);
 					context.stroke();
 
 					if (planet.docked_ships.length > 0) {
@@ -195,10 +207,16 @@
 							let y = Math.floor(ship.y * renderer.scale);
 							let r = Math.floor(1 * renderer.scale);
 
-							context.lineWidth = 2;
 							context.strokeStyle = colours[i];
+
+							context.lineWidth = 2;
 							context.beginPath();
 							context.arc(x, y, r, 0, Math.PI * 2, true);
+							context.stroke();
+
+							context.lineWidth = 1;
+							context.beginPath();
+							context.arc(x, y, 5 * renderer.scale, 0, Math.PI * 2, true);
 							context.stroke();
 						}
 					}
@@ -222,6 +240,8 @@
 	ipcRenderer.on("forward", (event, n) => {
 		renderer.forward(n);
 	});
+
+	window.addEventListener("resize", () => renderer.draw());
 
 </script>
 </body>
