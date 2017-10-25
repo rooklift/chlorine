@@ -108,7 +108,7 @@
 			context.clearRect(0, 0, canvas.width, canvas.height);
 			renderer.draw_planets();
 			renderer.draw_ships();
-			document.title = `${renderer.turn + 1} / ${renderer.game.frames.length}`		// Won't use zeroth index
+			document.title = `${renderer.turn} / ${renderer.game.frames.length}`
 		};
 
 		renderer.draw_planets = () => {
