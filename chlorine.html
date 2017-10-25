@@ -219,16 +219,15 @@
 
 							let x = ship.x * renderer.scale;
 							let y = ship.y * renderer.scale;
-							let r = 1 * renderer.scale;
+							let r = 0.5 * renderer.scale;
 
-							context.strokeStyle = colours[i];
-
-							context.lineWidth = 2;
+							context.fillStyle = colours[i];
 							context.beginPath();
 							context.arc(x, y, r, 0, Math.PI * 2, true);
-							context.stroke();
+							context.fill();
 
 							if (renderer.weapon_ranges) {
+								context.strokeStyle = colours[i];
 								context.lineWidth = 1;
 								context.beginPath();
 								context.arc(x, y, 5 * renderer.scale, 0, Math.PI * 2, true);
