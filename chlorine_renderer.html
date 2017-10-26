@@ -65,10 +65,10 @@
 
 			zstd.decompressFileToStream(filename, loading_stream, (err, result) => {
 				if (err) {
-					alert("Couldn't load this file")
+					alert("Couldn't load this file");
 				}
 				result.on("error", (err) => {
-					alert("Couldn't load this file")
+					alert("Couldn't load this file");
 				});
 				result.on("finish", () => {
 					renderer.game = JSON.parse(all_chunks.join(""));
@@ -80,7 +80,7 @@
 		renderer.finish_load = () => {
 			renderer.turn = 0;
 			renderer.draw();
-		}
+		};
 
 		renderer.save = (filename) => {
 
@@ -266,7 +266,7 @@
 					// If the ship existed last turn, draw its final movement...
 
 					let pid = event.entity.owner;
-					let sid = event.entity.id
+					let sid = event.entity.id;
 
 					let last_ship = last_frame.ships[pid][sid];
 					if (last_ship) {
@@ -296,7 +296,7 @@
 					context.stroke();
 				}
 			}
-		}
+		};
 
 		renderer.send_info = () => {
 
@@ -370,7 +370,7 @@
 	window.ondragend = () => false;
 	window.ondrop = (event) => {
 		event.preventDefault();
-		renderer.open(event.dataTransfer.files[0].path)
+		renderer.open(event.dataTransfer.files[0].path);
 		return false;
 	};
 
