@@ -45,7 +45,6 @@
 	const context = canvas.getContext("2d");
 
 	const unitboxheight = unitbox.offsetHeight + 20;		// relies on #unitbox having margin of 10
-	console.log(unitboxheight);
 
 	function dist(x1, y1, x2, y2) {
 		let dx = x2 - x1;
@@ -59,6 +58,8 @@
 
 		renderer.game = null;
 		renderer.turn = 0;
+		renderer.tracking_type = null;
+		renderer.tracking_id = -1;
 
 		renderer.weapon_ranges = false;
 		renderer.docking_ranges = false;
@@ -97,6 +98,8 @@
 
 		renderer.finish_load = () => {
 			renderer.turn = 0;
+			renderer.tracking_type = null;
+			renderer.tracking_id = -1;
 			renderer.draw();
 		};
 
@@ -148,6 +151,8 @@
 			renderer.draw_ships();
 			renderer.draw_events();
 
+			renderer.display_tracked();
+
 			let turn_string = `${renderer.turn} / ${renderer.game.frames.length - 1}`;
 			document.title = renderer.game.player_names.join(" / ") + " --- " + turn_string;
 
@@ -158,12 +163,52 @@
 			let owner_string = (planet.owner === null) ? "Unowned" : renderer.game.player_names[planet.owner];
 			let colour = (planet.owner === null) ? "white" : colours[planet.owner];
 			unitbox.innerHTML = `Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>).`;
+			unitbox.innerHTML += ` HP: ${planet.health}.`;
 		};
 
 		renderer.display_ship = (ship) => {
 			let owner_string = renderer.game.player_names[ship.owner];
 			let colour = colours[ship.owner];
 			unitbox.innerHTML = `Ship ${ship.id} (<span style="color: ${colour}">${owner_string}</span>).`;
+			unitbox.innerHTML += ` HP: ${ship.health}.`;
+		};
+
+		renderer.display_tracked = () => {
+
+			if (renderer.tracking_type === null) {
+				return;
+			}
+
+			let frame = renderer.game.frames[renderer.turn];
+
+			if (renderer.tracking_type === "ship") {
+
+				for (let pid in frame.ships) {
+
+					if (frame.ships.hasOwnProperty(pid) === false) {
+						continue;
+					}
+
+					for (let sid in frame.ships[pid]) {
+
+						if (frame.ships[pid].hasOwnProperty(sid) === false) {
+							continue;
+						}
+
+						if (parseInt(sid, 10) === renderer.tracking_id) {
+
+							renderer.display_ship(frame.ships[pid][sid]);
+							return;
+						}
+					}
+				}
+
+				// Dead
+
+				renderer.tracking_type = null;
+				renderer.tracking_id = -1;
+				unitbox.innerHTML = "No selection.";
+			}
 		};
 
 		renderer.click = (event) => {
@@ -186,6 +231,8 @@
 				let planet = frame_planets[n];
 
 				if (dist(worldx, worldy, planet.x, planet.y) < planet.r) {
+					renderer.tracking_type = "planet";
+					renderer.tracking_id = planet.id;
 					renderer.display_planet(planet);
 					return;
 				}
@@ -221,12 +268,16 @@
 			}
 
 			if (best_distance < 5) {
+				renderer.tracking_type = "ship";
+				renderer.tracking_id = best_ship.id;
 				renderer.display_ship(best_ship);
 				return;
 			}
 
 			// User clicked empty space.
 
+			renderer.tracking_type = null;
+			renderer.tracking_id = -1;
 			unitbox.innerHTML = "No selection.";
 		};
 
