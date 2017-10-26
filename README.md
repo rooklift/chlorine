@@ -18,8 +18,8 @@ npm install electron --save-dev --save-exact
 ./node_modules/.bin/electron .
 ```
 
-# Dependencies (not counting Electron itself)
-* [node-zstandard](https://www.npmjs.com/package/node-zstandard)
+# Other dependencies
+* [node-zstandard](https://www.npmjs.com/package/node-zstandard) (gets installed by `npm install`)
 
 # Usage
 
