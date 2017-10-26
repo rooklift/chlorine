@@ -154,6 +154,18 @@
 			renderer.send_info();
 		};
 
+		renderer.display_planet = (planet) => {
+			let owner_string = (planet.owner === null) ? "Unowned" : renderer.game.player_names[planet.owner];
+			let colour = (planet.owner === null) ? "white" : colours[planet.owner];
+			unitbox.innerHTML = `Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>).`;
+		};
+
+		renderer.display_ship = (ship) => {
+			let owner_string = renderer.game.player_names[ship.owner];
+			let colour = colours[ship.owner];
+			unitbox.innerHTML = `Ship ${ship.id} (<span style="color: ${colour}">${owner_string}</span>).`;
+		};
+
 		renderer.click = (event) => {
 
 			if (!renderer.game) {
@@ -165,8 +177,6 @@
 			let worldx = event.offsetX / scale;
 			let worldy = event.offsetY / scale;
 
-			unitbox.innerHTML = "No selection.";
-
 			// Was the click inside a planet?
 
 			let frame_planets = renderer.current_planets();
@@ -176,13 +186,53 @@
 				let planet = frame_planets[n];
 
 				if (dist(worldx, worldy, planet.x, planet.y) < planet.r) {
-					unitbox.innerHTML = `Planet ${planet.id}`;
-					return
+					renderer.display_planet(planet);
+					return;
 				}
 			}
+
+			// Was the click near a ship?
+
+			let best_ship = null;
+			let best_distance = 99999;
+
+			let frame = renderer.game.frames[renderer.turn];
+
+			for (let pid in frame.ships) {
+
+				if (frame.ships.hasOwnProperty(pid) === false) {
+					continue;
+				}
+
+				for (let sid in frame.ships[pid]) {
+
+					if (frame.ships[pid].hasOwnProperty(sid) === false) {
+						continue;
+					}
+
+					let ship = frame.ships[pid][sid];
+
+					let distance = dist(worldx, worldy, ship.x, ship.y);
+					if (distance < best_distance) {
+						best_ship = ship;
+						best_distance = distance;
+					}
+				}
+			}
+
+			if (best_distance < 5) {
+				renderer.display_ship(best_ship);
+				return;
+			}
+
+			// User clicked empty space.
+
+			unitbox.innerHTML = "No selection.";
 		};
 
 		renderer.current_planets = () => {
+
+			// Returns an array of planets this turn with all needed info, BUT THE INDICES DO NOT MATCH PLANET ID.
 
 			if (!renderer.game) {
 				return [];
@@ -427,9 +477,6 @@
 			});
 		};
 
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerHeight - unitboxheight;
-
 		return renderer;
 	}
 
@@ -469,7 +516,12 @@
 		return false;
 	};
 
-	ipcRenderer.send("renderer_ready", null);
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight - unitboxheight;
+
+	// Give the window and canvas a little time to settle... (may prevent sudden jerk during load).
+
+	setTimeout(() => {ipcRenderer.send("renderer_ready", null);}, 200);
 
 </script>
 </body>
