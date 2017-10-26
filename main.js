@@ -9,7 +9,7 @@ const windows = require("./modules/windows");
 // -------------------------------------------------------
 
 electron.app.on("ready", () => {
-	windows.new({width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine.html")});		// Seems to resolve OS X issues.
+	windows.new({width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine.html")});
 	menu_build();
 });
 
