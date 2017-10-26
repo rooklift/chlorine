@@ -1,8 +1,8 @@
 import os, subprocess, sys
 
-directory = os.path.dirname(os.path.realpath(__file__))
-
 # Dragging a file onto this script launches the app and opens the file, at least in Windows...
+
+directory = os.path.dirname(os.path.realpath(__file__))		# directory of the app
 
 if len(sys.argv) > 1:
 	print(sys.argv[1])
