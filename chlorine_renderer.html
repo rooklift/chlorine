@@ -320,6 +320,9 @@
 			}
 
 			for (let plid in frame.planets) {
+				if (frame.planets.hasOwnProperty(plid) === false) {
+					continue;
+				}
 				if (frame.planets[plid].owner !== null) {
 					planet_count[frame.planets[plid].owner] += 1;
 				}
