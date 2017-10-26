@@ -15,7 +15,7 @@ If you only have npm, I'm told the following works instead:
 ```
 npm install
 npm install electron --save-dev --save-exact
-node_modules/.bin/electron .
+./node_modules/.bin/electron .
 ```
 
 # Dependencies (not counting Electron itself)
