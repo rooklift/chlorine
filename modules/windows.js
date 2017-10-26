@@ -21,7 +21,7 @@ exports.new = (params = {}) => {
         backgroundColor: "#000000",
         useContentSize: true,
         resizable: params.resizable,
-        webPreferences: { zoomFactor: zoom_factor }
+        webPreferences: { zoomFactor: zoom_factor, webSecurity: false }
     });
 
     win.loadURL(url.format({
