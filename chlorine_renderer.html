@@ -8,15 +8,23 @@
 			border: 0;
 			padding: 0;
 			background-color: black;
+			color: white;
 			user-select: none;
 			cursor: default;
+			overflow: hidden;
+		}
+		#unitbox {
+			margin: 10px;		/* calculation below of unitbox total size relies on this */
+			border: 0;
+			padding: 0;
 			overflow: hidden;
 		}
 	</style>
 </head>
 <body>
 
-<canvas id="canvas" width="0" height="0" style="position: absolute;"></canvas>
+<p id="unitbox">No file loaded. Use file menu or drag-and-drop.</p>
+<canvas id="canvas" width="0" height="0"></canvas>
 
 <script>
 
@@ -32,12 +40,22 @@
 	const stream = require("stream");
 	const zstd = require("node-zstandard");
 
+	const unitbox = document.getElementById("unitbox");
 	const canvas = document.getElementById("canvas");
 	const context = canvas.getContext("2d");
 
+	const unitboxheight = unitbox.offsetHeight + 20;		// relies on #unitbox having margin of 10
+	console.log(unitboxheight);
+
+	function dist(x1, y1, x2, y2) {
+		let dx = x2 - x1;
+		let dy = y2 - y1;
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+
 	function make_renderer() {
 
-		let renderer = {};
+		let renderer = Object.create(null);
 
 		renderer.game = null;
 		renderer.turn = 0;
@@ -117,12 +135,12 @@
 
 		renderer.draw = () => {
 
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight - unitboxheight;
+
 			if (!renderer.game) {
 				return;
 			}
-
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
 
 			context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -136,9 +154,41 @@
 			renderer.send_info();
 		};
 
-		renderer.draw_planets = () => {
+		renderer.click = (event) => {
+
+			if (!renderer.game) {
+				return;
+			}
 
 			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
+
+			let worldx = event.offsetX / scale;
+			let worldy = event.offsetY / scale;
+
+			unitbox.innerHTML = "No selection.";
+
+			// Was the click inside a planet?
+
+			let frame_planets = renderer.current_planets();
+
+			for (let n = 0; n < frame_planets.length; n++) {		// Note than n here doesn't match planet ID.
+
+				let planet = frame_planets[n];
+
+				if (dist(worldx, worldy, planet.x, planet.y) < planet.r) {
+					unitbox.innerHTML = `Planet ${planet.id}`;
+					return
+				}
+			}
+		};
+
+		renderer.current_planets = () => {
+
+			if (!renderer.game) {
+				return [];
+			}
+
+			let ret = [];
 
 			let frame = renderer.game.frames[renderer.turn];
 
@@ -150,13 +200,35 @@
 					continue;
 				}
 
-				let planet = frame.planets[plid];
+				let pl = Object.create(null);
+				pl.id = plid;
+				pl.x = game_planets[plid].x;				// The planet doesn't contain x, y, radius;
+				pl.y = game_planets[plid].y;				// get those from the game_planets....
+				pl.r = game_planets[plid].r;
+				pl.docked_ships = frame.planets[plid].docked_ships;
+				pl.health = frame.planets[plid].health;
+				pl.owner = frame.planets[plid].owner;
 
-				// The planet doesn't contain x, y, radius; we can get it from the game_planets....
+				ret.push(pl);
+			}
 
-				let x = game_planets[plid].x * scale;
-				let y = game_planets[plid].y * scale;
-				let r = game_planets[plid].r * scale;
+			return ret;
+		};
+
+		renderer.draw_planets = () => {
+
+			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
+
+			let frame_planets = renderer.current_planets();
+
+			for (let n = 0; n < frame_planets.length; n++) {		// Note than n here doesn't match planet ID.
+
+				let planet = frame_planets[n];
+				let plid = planet.id;
+
+				let x = planet.x * scale;
+				let y = planet.y * scale;
+				let r = planet.r * scale;
 
 				if (planet.owner === null) {
 					context.strokeStyle = "gray";
@@ -182,7 +254,7 @@
 
 						let sid = planet.docked_ships[n];
 
-						let ship = frame.ships[planet.owner.toString()][sid.toString()];
+						let ship = renderer.game.frames[renderer.turn].ships[planet.owner][sid];
 
 						let x2 = ship.x * scale;
 						let y2 = ship.y * scale;
@@ -355,6 +427,9 @@
 			});
 		};
 
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight - unitboxheight;
+
 		return renderer;
 	}
 
@@ -377,6 +452,11 @@
 	});
 
 	window.addEventListener("resize", () => renderer.draw());
+
+	canvas.addEventListener("mousedown", (event) => {
+		event.preventDefault();
+		renderer.click(event);
+	});
 
 	// Setup drag-and-drop...
 
