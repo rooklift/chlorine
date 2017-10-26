@@ -162,15 +162,18 @@
 		renderer.display_planet = (planet) => {
 			let owner_string = (planet.owner === null) ? "Unowned" : renderer.game.player_names[planet.owner];
 			let colour = (planet.owner === null) ? "white" : colours[planet.owner];
-			unitbox.innerHTML = `Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>).`;
-			unitbox.innerHTML += ` HP: ${planet.health}.`;
+			unitbox.innerHTML = `Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>)`;
+			unitbox.innerHTML += ` --- ${planet.health} health`;
 		};
 
 		renderer.display_ship = (ship) => {
 			let owner_string = renderer.game.player_names[ship.owner];
 			let colour = colours[ship.owner];
-			unitbox.innerHTML = `Ship ${ship.id} (<span style="color: ${colour}">${owner_string}</span>).`;
-			unitbox.innerHTML += ` HP: ${ship.health}.`;
+			unitbox.innerHTML = `Ship ${ship.id} (<span style="color: ${colour}">${owner_string}</span>)`;
+			unitbox.innerHTML += ` --- [ ${ship.x.toFixed(2)} , ${ship.y.toFixed(2)} ] --- ${ship.health} health`;
+			if (ship.docking.status !== "undocked") {
+				unitbox.innerHTML += ` --- <span style="color: ${colour}">${ship.docking.status}</span>`;
+			}
 		};
 
 		renderer.display_tracked = () => {
@@ -217,9 +220,9 @@
 				}
 			}
 
-			// Dead.
+			// Dead. But leave the selection as it is.
 
-			unitbox.innerHTML = "No selection.";
+			unitbox.innerHTML = "(selection no longer present)";
 		};
 
 		renderer.click = (event) => {
