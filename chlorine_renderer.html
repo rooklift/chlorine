@@ -146,6 +146,10 @@
 
 			for (let plid in frame.planets) {				// "plid" means planet ID.
 
+				if (frame.planets.hasOwnProperty(plid) === false) {
+					continue;
+				}
+
 				let planet = frame.planets[plid];
 
 				// The planet doesn't contain x, y, radius; we can get it from the game_planets....
@@ -204,7 +208,15 @@
 
 			for (let pid in frame.ships) {
 
+				if (frame.ships.hasOwnProperty(pid) === false) {
+					continue;
+				}
+
 				for (let sid in frame.ships[pid]) {
+
+					if (frame.ships[pid].hasOwnProperty(sid) === false) {
+						continue;
+					}
 
 					let ship = frame.ships[pid][sid];
 
