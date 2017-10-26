@@ -91,7 +91,7 @@
 			fs.writeFileSync(filename, JSON.stringify(renderer.game, null, "\t"));
 		};
 
-		renderer.forward = (n) => {
+		renderer.forward = (n) => {		// Negative arguments are allowed (go back).
 
 			if (!renderer.game) {
 				return;
@@ -262,6 +262,25 @@
 
 					let x = event.x * scale;
 					let y = event.y * scale;
+
+					// If the ship existed last turn, draw its final movement...
+
+					let pid = event.entity.owner;
+					let sid = event.entity.id
+
+					let last_ship = last_frame.ships[pid][sid];
+					if (last_ship) {
+						let x2 = last_ship.x * scale;
+						let y2 = last_ship.y * scale;
+						context.lineWidth = 1;
+						context.strokeStyle = colours[parseInt(pid, 10)];
+						context.beginPath();
+						context.moveTo(x, y);
+						context.lineTo(x2, y2);
+						context.stroke();
+					}
+
+					// Draw a destruction marker...
 
 					context.lineWidth = 1;
 					context.strokeStyle = "#ffffff";
