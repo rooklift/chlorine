@@ -3,11 +3,18 @@ Replay viewer for [Halite2](https://halite.io/), in JavaScript (Electron).
 
 # Installation
 
-You must install [Electron](https://electron.atom.io/). Once that's done, assuming you also have npm, you can do:
+If you have npm and [Electron](https://electron.atom.io/), you can do:
 
 ```
 npm install
 electron .
+```
+
+If you only have npm, I'm told the following works instead:
+
+```
+npm install electron --save-dev --save-exact
+node_modules/.bin/electron .
 ```
 
 # Dependencies (not counting Electron itself)
