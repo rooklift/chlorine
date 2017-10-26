@@ -81,16 +81,13 @@ exports.send = (token, channel, msg) => {
 };
 
 exports.set_menu = (token, menu) => {
+
+	// Set an individual window's menu. Has some issues with OS X.
+
 	if (all_windows[token] === undefined) {
 		return
 	}
 	all_windows[token].setMenu(menu);
-}
-
-exports.set_all_menus = (menu) => {
-	for (let token in all_windows) {
-		all_windows[token].setMenu(menu);
-	}
 }
 
 exports.show = (token) => {
