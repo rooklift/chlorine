@@ -10,9 +10,8 @@ const windows = require("./modules/windows");
 
 electron.app.on("ready", () => {
 	windows.new("renderer", {show: true, width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine_renderer.html")});
-	windows.new("info", {show: false, width: 400, height: 400, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
-
-	windows.set_menu("renderer", make_main_menu());
+	windows.new("info", {show: true, width: 400, height: 400, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
+	windows.set_all_menus(make_main_menu());
 });
 
 electron.app.on("window-all-closed", () => {

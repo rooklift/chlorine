@@ -254,13 +254,18 @@
 			let lines = [];
 
 			for (let n = 0; n < renderer.game.player_names.length; n++) {
-				lines.push("<tr><td>" + renderer.game.player_names[n] + "</td></tr>");
+				lines.push(`<h2 style="color: ${colours[n]}">${renderer.game.player_names[n]}</h2>`);
+
+				let ships = renderer.game.frames[renderer.turn].ships[n];
+				let ship_count = Object.keys(ships).length;
+
+				lines.push(`Ships: ${ship_count}`);
 			}
 
 			ipcRenderer.send("relay", {
 				receiver: "info",
 				channel: "update",
-				content: "<pre><table>" + lines.join("") + "</table></pre>",
+				content: "<table>" + lines.join("") + "</table>",
 			});
 		};
 
