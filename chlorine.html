@@ -269,6 +269,17 @@
 
 	window.addEventListener("resize", () => renderer.draw());
 
+	// Setup drag-and-drop...
+
+	window.ondragover = () => false;		// What does
+	window.ondragleave = () => false;		// all this
+	window.ondragend = () => false;			// even do?
+	window.ondrop = (event) => {
+		event.preventDefault();
+		renderer.open(event.dataTransfer.files[0].path)
+		return false;
+	};
+
 	ipcRenderer.send("renderer_ready", null);
 
 </script>
