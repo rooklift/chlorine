@@ -2,13 +2,16 @@
 Replay viewer for [Halite2](https://halite.io/), in JavaScript (Electron).
 
 # Installation
+
+You must install Electron. Once that's done, assuming you also have npm, you can do:
+
 ```
 npm install
 electron .
 ```
 
 # Dependencies
-* node-zstandard
+* node-zstandard (will be installed by npm)
 
 # Usage
 
