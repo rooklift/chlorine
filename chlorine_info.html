@@ -41,9 +41,9 @@
 
 	// Setup drag-and-drop...
 
-	window.ondragover = () => false;		// What does
-	window.ondragleave = () => false;		// all this
-	window.ondragend = () => false;			// even do?
+	window.ondragover = () => false;
+	window.ondragleave = () => false;
+	window.ondragend = () => false;
 	window.ondrop = (event) => {
 		event.preventDefault();
 		ipcRenderer.send("relay", {
