@@ -9,8 +9,10 @@ const windows = require("./modules/windows");
 // -------------------------------------------------------
 
 electron.app.on("ready", () => {
-	windows.new("renderer", {width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine.html")});
-	menu_build();
+	windows.new("renderer", {show: true, width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine_renderer.html")});
+	windows.new("info", {show: false, width: 400, height: 400, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
+
+	windows.set_menu("renderer", make_main_menu());
 });
 
 electron.app.on("window-all-closed", () => {
@@ -35,7 +37,7 @@ ipcMain.on("renderer_ready", () => {
 
 // -------------------------------------------------------
 
-function menu_build() {
+function make_main_menu() {
 	const template = [
 		{
 			label: "File",
@@ -127,8 +129,24 @@ function menu_build() {
 				},
 			]
 		},
+		{
+			label: "Windows",
+			submenu: [
+				{
+					label: "Renderer",
+					click: () => {
+						windows.show("renderer");
+					}
+				},
+				{
+					label: "Info",
+					click: () => {
+						windows.show("info");
+					}
+				},
+			]
+		},
 	];
 
-	const menu = electron.Menu.buildFromTemplate(template);
-	electron.Menu.setApplicationMenu(menu);
+	return electron.Menu.buildFromTemplate(template);
 }

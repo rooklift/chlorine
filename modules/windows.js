@@ -7,14 +7,14 @@ const assign_without_overwrite = require("./utils").assign_without_overwrite;
 
 const all_windows = Object.create(null);	// Map of token --> window.
 
-exports.new = (token, params = {}) => {		// Token is an internal name for us to refer to the window by.
+exports.new = (token, params = {}) => {		// token is an internal name for us to refer to the window by.
 
 	if (all_windows[token]) {
 		alert("windows.js: Asked to create window with token '" + token + "' which already exists!");
 		return;
 	}
 
-	let defaults = {width: 600, height: 400, resizable: true, page: path.join(__dirname, "index.html")};
+	let defaults = {show: true, width: 600, height: 400, resizable: true, page: path.join(__dirname, "index.html")};
 	assign_without_overwrite(params, defaults);
 
 	// The screen may be zoomed, we can compensate...
@@ -22,6 +22,7 @@ exports.new = (token, params = {}) => {		// Token is an internal name for us to 
 	let zoom_factor = 1 / electron.screen.getPrimaryDisplay().scaleFactor;
 
 	let win = new electron.BrowserWindow({
+		show: params.show,
 		width: params.width * zoom_factor,
 		height: params.height * zoom_factor,
 		backgroundColor: "#000000",
@@ -36,10 +37,18 @@ exports.new = (token, params = {}) => {		// Token is an internal name for us to 
 		slashes: true
 	}));
 
+	win.setMenu(null);
+
 	all_windows[token] = win;
 
-	win.on("closed", () => {
-		delete all_windows[token];
+	win.on("close", (evt) => {
+		evt.preventDefault();
+		win.hide();
+		quit_if_all_windows_are_hidden();
+	});
+
+	win.on("hide", () => {
+		quit_if_all_windows_are_hidden();
 	});
 };
 
@@ -70,3 +79,34 @@ exports.send = (token, channel, msg) => {
 	let contents = all_windows[token].webContents;
 	contents.send(channel, msg);
 };
+
+exports.set_menu = (token, menu) => {
+	if (all_windows[token] === undefined) {
+		return
+	}
+	all_windows[token].setMenu(menu);
+}
+
+exports.show = (token) => {
+	if (all_windows[token] === undefined) {
+		return
+	}
+	all_windows[token].show();
+}
+
+function quit_if_all_windows_are_hidden() {
+	let keys = Object.keys(all_windows);
+	for (let n = 0; n < keys.length; n++) {
+		let key = keys[n];
+		let win = all_windows[key];
+		try {
+			if (win.isVisible()) {
+				return;
+			}
+		} catch (e) {
+			// Can fail at end of app life when the window has been destroyed.
+		}
+	}
+
+	electron.app.exit();						// Why doesn't quit work?
+}

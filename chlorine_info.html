@@ -1,0 +1,40 @@
+<html>
+<head><title>Info</title>
+<style>
+	body {
+		margin: 0.5em;
+		background-color: black;
+		color: white;
+	}
+	a {
+		color: orange;
+	}
+</style>
+</head>
+<body>
+
+<div id="content">In progress... likely working at the end of 2017-10-26.</div>
+
+<script>
+	"use strict";
+
+	const ipcRenderer = require("electron").ipcRenderer;
+
+	ipcRenderer.on("update", (event, opts) => {
+		let content = document.getElementById("content");
+		content.innerHTML = opts.msg;
+	});
+
+	document.addEventListener("keydown", (evt) => {
+		ipcRenderer.send("keydown", {key: evt.key});
+	});
+
+	document.addEventListener("keyup", (evt) => {
+		ipcRenderer.send("keyup", {key: evt.key});
+	});
+
+	ipcRenderer.send("ready", null);
+</script>
+
+</body>
+</html>
