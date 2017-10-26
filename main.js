@@ -9,7 +9,7 @@ const windows = require("./modules/windows");
 // -------------------------------------------------------
 
 electron.app.on("ready", () => {
-	windows.new({width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine.html")});
+	windows.new("renderer", {width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine.html")});
 	menu_build();
 });
 
@@ -29,7 +29,7 @@ ipcMain.on("renderer_ready", () => {
 		}
 	}
 	if (filename !== "") {
-		windows.send("open", filename);
+		windows.send("renderer", "open", filename);
 	}
 });
 
@@ -46,7 +46,7 @@ function menu_build() {
 					click: () => {
 						let files = electron.dialog.showOpenDialog();
 						if (files && files.length > 0) {
-							windows.send("open", files[0]);
+							windows.send("renderer", "open", files[0]);
 						}
 					}
 				},
@@ -56,7 +56,7 @@ function menu_build() {
 					click: () => {
 						let outfilename = electron.dialog.showSaveDialog();
 						if (outfilename) {
-							windows.send("save", outfilename);
+							windows.send("renderer", "save", outfilename);
 						}
 					}
 				},
@@ -81,14 +81,14 @@ function menu_build() {
 					label: "Forward",
 					accelerator: "Right",
 					click: () => {
-						windows.send("forward", 1);
+						windows.send("renderer", "forward", 1);
 					}
 				},
 				{
 					label: "Back",
 					accelerator: "Left",
 					click: () => {
-						windows.send("forward", -1);
+						windows.send("renderer", "forward", -1);
 					}
 				},
 				{
@@ -98,14 +98,14 @@ function menu_build() {
 					label: "Move To Start",
 					accelerator: "Home",
 					click: () => {
-						windows.send("forward", -99999);
+						windows.send("renderer", "forward", -99999);
 					}
 				},
 				{
 					label: "Move To End",
 					accelerator: "End",
 					click: () => {
-						windows.send("forward", 99999);
+						windows.send("renderer", "forward", 99999);
 					}
 				},
 			]
@@ -116,13 +116,13 @@ function menu_build() {
 				{
 					label: "Toggle Weapon Ranges",
 					click: () => {
-						windows.send("toggle", "weapon_ranges");
+						windows.send("renderer", "toggle", "weapon_ranges");
 					}
 				},
 				{
 					label: "Toggle Docking Ranges",
 					click: () => {
-						windows.send("toggle", "docking_ranges");
+						windows.send("renderer", "toggle", "docking_ranges");
 					}
 				},
 			]
