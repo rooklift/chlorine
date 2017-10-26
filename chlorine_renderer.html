@@ -128,6 +128,7 @@
 
 			renderer.draw_planets();
 			renderer.draw_ships();
+			renderer.draw_events();
 
 			let turn_string = `${renderer.turn} / ${renderer.game.frames.length - 1}`;
 			document.title = renderer.game.player_names.join(" / ") + " --- " + turn_string;
@@ -199,11 +200,7 @@
 
 			let frame = renderer.game.frames[renderer.turn];
 
-			let last_frame = null;
-
-			if (renderer.turn > 0) {
-				last_frame = renderer.game.frames[renderer.turn - 1];
-			}
+			let last_frame = (renderer.turn <= 0) ? null : renderer.game.frames[renderer.turn - 1];
 
 			for (let pid in frame.ships) {
 
@@ -244,6 +241,43 @@
 				}
 			}
 		};
+
+		renderer.draw_events = () => {
+
+			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
+
+			// Visually things look better if we draw last frame's events.
+
+			if (renderer.turn <= 0) {
+				return;
+			}
+
+			let last_frame = renderer.game.frames[renderer.turn - 1];
+
+			for (let n = 0; n < last_frame.events.length; n++) {
+
+				let event = last_frame.events[n];
+
+				if (event.event === "destroyed" && event.entity.type === "ship") {
+
+					let x = event.x * scale;
+					let y = event.y * scale;
+
+					context.lineWidth = 1;
+					context.strokeStyle = "#ffffff";
+
+					context.beginPath();
+					context.moveTo(x - 1 * scale, y - 1 * scale);
+					context.lineTo(x + 1 * scale, y + 1 * scale);
+					context.stroke();
+
+					context.beginPath();
+					context.moveTo(x + 1 * scale, y - 1 * scale);
+					context.lineTo(x - 1 * scale, y + 1 * scale);
+					context.stroke();
+				}
+			}
+		}
 
 		renderer.send_info = () => {
 
