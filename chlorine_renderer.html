@@ -196,19 +196,30 @@
 						}
 
 						if (parseInt(sid, 10) === renderer.tracking_id) {
-
 							renderer.display_ship(frame.ships[pid][sid]);
 							return;
 						}
 					}
 				}
 
-				// Dead
+			} else if (renderer.tracking_type === "planet") {
 
-				renderer.tracking_type = null;
-				renderer.tracking_id = -1;
-				unitbox.innerHTML = "No selection.";
+				let frame_planets = renderer.current_planets();
+
+				for (let n = 0; n < frame_planets.length; n++) {		// Note than n here doesn't match planet ID.
+
+					let planet = frame_planets[n];
+
+					if (planet.id === renderer.tracking_id) {
+						renderer.display_planet(planet);
+						return;
+					}
+				}
 			}
+
+			// Dead.
+
+			unitbox.innerHTML = "No selection.";
 		};
 
 		renderer.click = (event) => {
