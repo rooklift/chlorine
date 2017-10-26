@@ -52,6 +52,7 @@ function menu_build() {
 				},
 				{
 					label: "Save decompressed JSON...",
+					accelerator: "CommandOrControl+S",
 					click: () => {
 						let outfilename = electron.dialog.showSaveDialog();
 						if (outfilename) {
