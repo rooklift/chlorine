@@ -10,8 +10,8 @@ npm install
 electron .
 ```
 
-# Dependencies
-* node-zstandard (will be installed by npm)
+# Dependencies (not counting Electron itself)
+* [node-zstandard](https://www.npmjs.com/package/node-zstandard)
 
 # Usage
 
