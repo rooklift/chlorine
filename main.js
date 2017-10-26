@@ -44,7 +44,7 @@ function menu_build() {
 					accelerator: "CommandOrControl+O",
 					click: () => {
 						let files = electron.dialog.showOpenDialog();
-						if (files.length > 0) {
+						if (files && files.length > 0) {
 							windows.send("open", files[0]);
 						}
 					}
