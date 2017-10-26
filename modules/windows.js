@@ -97,6 +97,10 @@ exports.show = (token) => {
 	all_windows[token].show();
 }
 
+exports.get_window = (token) => {
+	return all_windows[token];
+}
+
 function quit_if_all_windows_are_hidden() {
 	let keys = Object.keys(all_windows);
 	for (let n = 0; n < keys.length; n++) {
