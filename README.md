@@ -13,6 +13,7 @@ electron .
 If you only have npm, I'm told the following works instead:
 
 ```
+npm install
 npm install electron --save-dev --save-exact
 node_modules/.bin/electron .
 ```
