@@ -20,9 +20,9 @@
 
 	const ipcRenderer = require("electron").ipcRenderer;
 
-	ipcRenderer.on("update", (event, opts) => {
+	ipcRenderer.on("update", (event, msg) => {
 		let content = document.getElementById("content");
-		content.innerHTML = opts.msg;
+		content.innerHTML = msg;
 	});
 
 	document.addEventListener("keydown", (evt) => {

@@ -21,18 +21,24 @@ electron.app.on("window-all-closed", () => {
 
 // -------------------------------------------------------
 
-// Load a file via command line with -o filename.
-
 ipcMain.on("renderer_ready", () => {
+
+	// Load a file via command line with -o filename.
+
 	let filename = "";
 	for (let i = 0; i < process.argv.length - 1; i++) {
 		if (process.argv[i] === "-o") {
-			filename = process.argv[i + 1]
+			filename = process.argv[i + 1];
 		}
 	}
 	if (filename !== "") {
 		windows.send("renderer", "open", filename);
 	}
+});
+
+ipcMain.on("relay", (event, msg) => {
+	// Messages from one browser window to another...
+	windows.send(msg.receiver, msg.channel, msg.content);
 });
 
 // -------------------------------------------------------
