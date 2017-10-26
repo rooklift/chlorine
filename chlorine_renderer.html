@@ -45,7 +45,6 @@
 
 		renderer.game = null;
 		renderer.turn = 0;
-		renderer.scale = 0;
 
 		renderer.weapon_ranges = false;
 		renderer.docking_ranges = false;
@@ -129,8 +128,6 @@
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
 
-			renderer.scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
-
 			context.clearRect(0, 0, canvas.width, canvas.height);
 
 			renderer.draw_planets();
@@ -139,14 +136,12 @@
 			let turn_string = `${renderer.turn} / ${renderer.game.frames.length - 1}`;
 			document.title = renderer.game.player_names.join(" / ") + " --- " + turn_string;
 
-			ipcRenderer.send("relay", {
-				receiver: "info",
-				channel: "update",
-				content: "test",
-			});
+			renderer.send_info();
 		};
 
 		renderer.draw_planets = () => {
+
+			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
 
 			let frame = renderer.game.frames[renderer.turn];
 
@@ -158,9 +153,9 @@
 
 				// The planet doesn't contain x, y, radius; we can get it from the game_planets....
 
-				let x = game_planets[plid].x * renderer.scale;
-				let y = game_planets[plid].y * renderer.scale;
-				let r = game_planets[plid].r * renderer.scale;
+				let x = game_planets[plid].x * scale;
+				let y = game_planets[plid].y * scale;
+				let r = game_planets[plid].r * scale;
 
 				if (planet.owner === null) {
 					context.strokeStyle = "gray";
@@ -176,7 +171,7 @@
 				if (renderer.docking_ranges) {
 					context.lineWidth = 1;
 					context.beginPath();
-					context.arc(x, y, r + renderer.game.constants.DOCK_RADIUS * renderer.scale, 0, Math.PI * 2, true);
+					context.arc(x, y, r + renderer.game.constants.DOCK_RADIUS * scale, 0, Math.PI * 2, true);
 					context.stroke();
 				}
 
@@ -188,8 +183,8 @@
 
 						let ship = frame.ships[planet.owner.toString()][sid.toString()];
 
-						let x2 = ship.x * renderer.scale;
-						let y2 = ship.y * renderer.scale;
+						let x2 = ship.x * scale;
+						let y2 = ship.y * scale;
 
 						context.lineWidth = 1;
 						context.strokeStyle = "white";
@@ -203,6 +198,8 @@
 		};
 
 		renderer.draw_ships = () => {
+
+			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
 
 			let frame = renderer.game.frames[renderer.turn];
 
@@ -218,9 +215,9 @@
 
 					let ship = frame.ships[pid][sid];
 
-					let x = ship.x * renderer.scale;
-					let y = ship.y * renderer.scale;
-					let r = renderer.game.constants.SHIP_RADIUS * renderer.scale;
+					let x = ship.x * scale;
+					let y = ship.y * scale;
+					let r = renderer.game.constants.SHIP_RADIUS * scale;
 
 					context.fillStyle = colours[parseInt(pid, 10)];
 					context.beginPath();
@@ -231,15 +228,15 @@
 						context.strokeStyle = colours[parseInt(pid, 10)];
 						context.lineWidth = 1;
 						context.beginPath();
-						context.arc(x, y, renderer.game.constants.WEAPON_RADIUS * renderer.scale, 0, Math.PI * 2, true);
+						context.arc(x, y, renderer.game.constants.WEAPON_RADIUS * scale, 0, Math.PI * 2, true);
 						context.stroke();
 					}
 
 					if (last_frame) {
 						let last_ship = last_frame.ships[pid][sid];
 						if (last_ship) {
-							let x2 = last_ship.x * renderer.scale;
-							let y2 = last_ship.y * renderer.scale;
+							let x2 = last_ship.x * scale;
+							let y2 = last_ship.y * scale;
 							context.lineWidth = 1;
 							context.strokeStyle = colours[parseInt(pid, 10)];
 							context.beginPath();
@@ -250,6 +247,21 @@
 					}
 				}
 			}
+		};
+
+		renderer.send_info = () => {
+
+			let lines = [];
+
+			for (let n = 0; n < renderer.game.player_names.length; n++) {
+				lines.push("<tr><td>" + renderer.game.player_names[n] + "</td></tr>");
+			}
+
+			ipcRenderer.send("relay", {
+				receiver: "info",
+				channel: "update",
+				content: "<pre><table>" + lines.join("") + "</table></pre>",
+			});
 		};
 
 		return renderer;

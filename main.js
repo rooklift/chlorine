@@ -37,8 +37,7 @@ ipcMain.on("renderer_ready", () => {
 });
 
 ipcMain.on("relay", (event, msg) => {
-	// Messages from one browser window to another...
-	windows.send(msg.receiver, msg.channel, msg.content);
+	windows.send(msg.receiver, msg.channel, msg.content);		// Messages from one browser window to another...
 });
 
 // -------------------------------------------------------
