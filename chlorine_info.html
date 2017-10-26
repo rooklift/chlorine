@@ -6,25 +6,30 @@
 		background-color: black;
 		color: white;
 	}
-	a {
-		color: orange;
+	li {
+		margin: 0;
+	}
+	ul {
+		margin: 0;
 	}
 </style>
 </head>
 <body>
 
-<div id="content">In progress... likely working at the end of 2017-10-26.</div>
+<div id="content">No game loaded.</div>
 
 <script>
+
 	"use strict";
 
 	const ipcRenderer = require("electron").ipcRenderer;
 
-	ipcRenderer.on("update", (event, opts) => {
+	ipcRenderer.on("update", (event, msg) => {
 		let content = document.getElementById("content");
-		content.innerHTML = opts.msg;
+		content.innerHTML = msg;
 	});
 
+/*
 	document.addEventListener("keydown", (evt) => {
 		ipcRenderer.send("keydown", {key: evt.key});
 	});
@@ -32,8 +37,25 @@
 	document.addEventListener("keyup", (evt) => {
 		ipcRenderer.send("keyup", {key: evt.key});
 	});
+*/
+
+	// Setup drag-and-drop...
+
+	window.ondragover = () => false;		// What does
+	window.ondragleave = () => false;		// all this
+	window.ondragend = () => false;			// even do?
+	window.ondrop = (event) => {
+		event.preventDefault();
+		ipcRenderer.send("relay", {
+			receiver: "renderer",
+			channel: "open",
+			content: event.dataTransfer.files[0].path,
+		});
+		return false;
+	};
 
 	ipcRenderer.send("ready", null);
+
 </script>
 
 </body>

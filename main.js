@@ -10,9 +10,8 @@ const windows = require("./modules/windows");
 
 electron.app.on("ready", () => {
 	windows.new("renderer", {show: true, width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine_renderer.html")});
-	windows.new("info", {show: false, width: 400, height: 400, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
-
-	windows.set_menu("renderer", make_main_menu());
+	windows.new("info", {show: true, width: 400, height: 400, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
+	windows.set_all_menus(make_main_menu());
 });
 
 electron.app.on("window-all-closed", () => {
@@ -21,18 +20,23 @@ electron.app.on("window-all-closed", () => {
 
 // -------------------------------------------------------
 
-// Load a file via command line with -o filename.
-
 ipcMain.on("renderer_ready", () => {
+
+	// Load a file via command line with -o filename.
+
 	let filename = "";
 	for (let i = 0; i < process.argv.length - 1; i++) {
 		if (process.argv[i] === "-o") {
-			filename = process.argv[i + 1]
+			filename = process.argv[i + 1];
 		}
 	}
 	if (filename !== "") {
 		windows.send("renderer", "open", filename);
 	}
+});
+
+ipcMain.on("relay", (event, msg) => {
+	windows.send(msg.receiver, msg.channel, msg.content);		// Messages from one browser window to another...
 });
 
 // -------------------------------------------------------
