@@ -173,7 +173,7 @@
 			let owner_string = (planet.owner === null) ? "Unowned" : renderer.game.player_names[planet.owner];
 			let colour = (planet.owner === null) ? "white" : colours[planet.owner];
 			unitbox.innerHTML = `Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>)`;
-			unitbox.innerHTML += ` --- ${planet.health} health`;
+			unitbox.innerHTML += ` --- ${planet.health} health --- ${planet.docking_spots} spots`;
 		};
 
 		renderer.display_ship = (ship) => {
@@ -342,9 +342,12 @@
 
 				let pl = Object.create(null);
 				pl.id = plid;
-				pl.x = game_planets[plid].x;				// The planet doesn't contain x, y, radius;
-				pl.y = game_planets[plid].y;				// get those from the game_planets....
+
+				pl.x = game_planets[plid].x;				// The frame's planet doesn't contain various things;
+				pl.y = game_planets[plid].y;				// so get those from the game_planets....
 				pl.r = game_planets[plid].r;
+				pl.docking_spots = game_planets[plid].docking_spots;
+
 				pl.docked_ships = frame.planets[plid].docked_ships;
 				pl.health = frame.planets[plid].health;
 				pl.owner = frame.planets[plid].owner;
