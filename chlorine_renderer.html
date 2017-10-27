@@ -213,16 +213,32 @@
 
 			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
 
+			context.setLineDash([5, 15]);
+
 			context.lineWidth = 1;
 			context.strokeStyle = "gray";
+
 			context.beginPath();
-			context.moveTo(entity.x * scale, 0);
+			context.moveTo(entity.x * scale, entity.y * scale);
+			context.lineTo(entity.x * scale, 0);
+			context.stroke();
+
+			context.beginPath();
+			context.moveTo(entity.x * scale, entity.y * scale);
 			context.lineTo(entity.x * scale, canvas.height);
 			context.stroke();
+
 			context.beginPath();
-			context.moveTo(0, entity.y * scale);
+			context.moveTo(entity.x * scale, entity.y * scale);
+			context.lineTo(0, entity.y * scale);
+			context.stroke();
+
+			context.beginPath();
+			context.moveTo(entity.x * scale, entity.y * scale);
 			context.lineTo(canvas.width, entity.y * scale);
 			context.stroke();
+
+			context.setLineDash([]);
 		}
 
 		renderer.display_tracked = () => {
