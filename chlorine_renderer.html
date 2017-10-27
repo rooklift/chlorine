@@ -190,7 +190,7 @@
 					if (command) {
 						let angle = command.angle;
 						let speed = command.magnitude;
-						if (speed && angle) {
+						if (speed !== undefined && angle !== undefined) {
 							unitbox.innerHTML += ` --- next command: <span style="color: ${colour}">thrust ${speed} / ${angle % 360}</span>`;
 						} else {
 							unitbox.innerHTML += ` --- next command: <span style="color: ${colour}">${command.type}</span>`;
