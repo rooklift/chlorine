@@ -23,7 +23,7 @@
 </head>
 <body>
 
-<p id="unitbox">No file loaded. Use file menu or drag-and-drop.</p>
+<p id="unitbox">Starting up...</p>
 <canvas id="canvas" width="0" height="0"></canvas>
 
 <script>
@@ -655,7 +655,10 @@
 
 	// Give the window and canvas a little time to settle... (may prevent sudden jerk during load).
 
-	setTimeout(() => {ipcRenderer.send("renderer_ready", null);}, 200);
+	setTimeout(() => {
+		ipcRenderer.send("renderer_ready", null);
+		unitbox.innerHTML = "No file loaded. Use file menu or drag-and-drop.";
+	}, 200);
 
 </script>
 </body>
