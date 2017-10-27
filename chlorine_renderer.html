@@ -121,6 +121,9 @@
 
 			renderer.spawn_counts = [];
 
+			// We make an array of dimension <players> * <turns> to
+			// hold how many ships a player has ever made at each turn.
+
 			for (let n = 0; n < renderer.game.num_players; n++) {
 				renderer.spawn_counts.push([0]);
 			}
@@ -144,6 +147,8 @@
 					renderer.spawn_counts[pid][0]++;
 				}
 			}
+
+			// Count spawn events...
 
 			for (let n = 0; n < renderer.game.frames.length; n++) {
 
