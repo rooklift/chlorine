@@ -157,7 +157,7 @@
 
 				if (events !== undefined) {
 
-					for (let i = 0; i < events.length; i++) {		// Last frame has no events
+					for (let i = 0; i < events.length; i++) {
 
 						let event = events[i];
 
@@ -165,8 +165,8 @@
 							renderer.spawn_counts[event.entity.owner][n + 1]++;
 						}
 					}
-
-}			}
+				}
+			}
 		};
 
 		renderer.save = (filename) => {
