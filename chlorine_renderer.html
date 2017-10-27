@@ -61,6 +61,8 @@
 		renderer.tracking_type = null;
 		renderer.tracking_id = -1;
 
+		renderer.spawn_counts = null;
+
 		renderer.weapon_ranges = false;
 		renderer.docking_ranges = false;
 		renderer.crosshair = true;
@@ -111,7 +113,60 @@
 			renderer.tracking_type = null;
 			renderer.tracking_id = -1;
 			unitbox.innerHTML = "No selection.";
+			renderer.count_spawns();
 			renderer.draw();
+		};
+
+		renderer.count_spawns = () => {
+
+			renderer.spawn_counts = [];
+
+			for (let n = 0; n < renderer.game.num_players; n++) {
+				renderer.spawn_counts.push([0]);
+			}
+
+			// Count initial ships... (will be 3 in a normal replay)
+
+			let frame = renderer.game.frames[0];
+
+			for (let pid in frame.ships) {
+
+				if (frame.ships.hasOwnProperty(pid) === false) {
+					continue;
+				}
+
+				for (let sid in frame.ships[pid]) {
+
+					if (frame.ships[pid].hasOwnProperty(sid) === false) {
+						continue;
+					}
+
+					renderer.spawn_counts[pid][0]++;
+				}
+			}
+
+			for (let n = 0; n < renderer.game.frames.length; n++) {
+
+				for (let p = 0; p < renderer.spawn_counts.length; p++) {
+					renderer.spawn_counts[p].push(renderer.spawn_counts[p][n]);
+				}
+
+				let frame = renderer.game.frames[n];
+
+				let events = frame.events;
+
+				if (events !== undefined) {
+
+					for (let i = 0; i < events.length; i++) {		// Last frame has no events
+
+						let event = events[i];
+
+						if (event.event === "spawned") {
+							renderer.spawn_counts[event.entity.owner][n + 1]++;
+						}
+					}
+
+}			}
 		};
 
 		renderer.save = (filename) => {
@@ -514,7 +569,8 @@
 
 			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
 
-			// Visually things look better if we draw last frame's events.
+			// Visually, things look better if we draw last frame's events. In any case, events logically
+			// occur *between* frames so its a matter of philosophy which frame to draw them in.
 
 			if (renderer.turn <= 0) {
 				return;
@@ -571,7 +627,7 @@
 			let frame = renderer.game.frames[renderer.turn];
 
 			let planet_count = [];
-			for (let n = 0; n < renderer.game.player_names.length; n++) {
+			for (let n = 0; n < renderer.game.num_players; n++) {
 				planet_count.push(0);
 			}
 
@@ -586,7 +642,7 @@
 
 			let lines = [];
 
-			for (let n = 0; n < renderer.game.player_names.length; n++) {
+			for (let n = 0; n < renderer.game.num_players; n++) {
 
 				let rank = ranks[renderer.game.stats[n].rank];
 
@@ -600,8 +656,12 @@
 
 				lines.push(`<h2 style="color: ${colour}">${renderer.game.player_names[n]} (${rank})</h2>`);
 
-				lines.push(`<ul><li>Ships: ${ship_count}</li></ul>`);
-				lines.push(`<ul><li>Planets: ${planet_count[n]}</li></ul>`);
+				lines.push(`<ul>`);
+				lines.push(`<li>Planets: ${planet_count[n]}</li>`);
+				lines.push(`<li>Ships: ${ship_count}</li>`);
+				lines.push(`<li>Total ships: ${renderer.spawn_counts[n][renderer.turn]}</li>`);
+				lines.push(`</ul>`);
+
 			}
 
 			ipcRenderer.send("relay", {
