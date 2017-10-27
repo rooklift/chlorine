@@ -131,6 +131,12 @@ function make_main_menu() {
 						windows.send("renderer", "toggle", "docking_ranges");
 					}
 				},
+				{
+					label: "Toggle Selection Crosshair",
+					click: () => {
+						windows.send("renderer", "toggle", "crosshair");
+					}
+				},
 			]
 		},
 		{

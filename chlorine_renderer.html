@@ -63,6 +63,7 @@
 
 		renderer.weapon_ranges = false;
 		renderer.docking_ranges = false;
+		renderer.crosshair = false;
 
 		renderer.open = (filename) => {
 
@@ -157,11 +158,11 @@
 
 			context.clearRect(0, 0, canvas.width, canvas.height);
 
+			renderer.display_tracked();
+
 			renderer.draw_planets();
 			renderer.draw_ships();
 			renderer.draw_events();
-
-			renderer.display_tracked();
 
 			let turn_string = `${renderer.turn} / ${renderer.game.frames.length - 1}`;
 			document.title = renderer.game.player_names.join(" / ") + " --- " + turn_string;
@@ -174,6 +175,10 @@
 			let colour = (planet.owner === null) ? "white" : colours[planet.owner];
 			unitbox.innerHTML = `Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>)`;
 			unitbox.innerHTML += ` --- ${planet.health} health --- ${planet.docking_spots} spots`;
+
+			if (renderer.crosshair) {
+				renderer.draw_crosshair(planet);
+			}
 		};
 
 		renderer.display_ship = (ship) => {
@@ -198,12 +203,32 @@
 					}
 				}
 			}
+
+			if (renderer.crosshair) {
+				renderer.draw_crosshair(ship);
+			}
 		};
+
+		renderer.draw_crosshair = (entity) => {
+
+			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height);
+
+			context.lineWidth = 1;
+			context.strokeStyle = "gray";
+			context.beginPath();
+			context.moveTo(entity.x * scale, 0);
+			context.lineTo(entity.x * scale, canvas.height);
+			context.stroke();
+			context.beginPath();
+			context.moveTo(0, entity.y * scale);
+			context.lineTo(canvas.width, entity.y * scale);
+			context.stroke();
+		}
 
 		renderer.display_tracked = () => {
 
 			if (renderer.tracking_type === null) {
-
+				unitbox.innerHTML = "No selection.";
 				return;
 			}
 
@@ -272,7 +297,7 @@
 				if (dist(worldx, worldy, planet.x, planet.y) < planet.r) {
 					renderer.tracking_type = "planet";
 					renderer.tracking_id = planet.id;
-					renderer.display_planet(planet);
+					renderer.draw();
 					return;
 				}
 			}
@@ -309,7 +334,7 @@
 			if (best_distance < 5) {
 				renderer.tracking_type = "ship";
 				renderer.tracking_id = best_ship.id;
-				renderer.display_ship(best_ship);
+				renderer.draw();
 				return;
 			}
 
@@ -317,7 +342,7 @@
 
 			renderer.tracking_type = null;
 			renderer.tracking_id = -1;
-			unitbox.innerHTML = "No selection.";
+			renderer.draw();
 		};
 
 		renderer.current_planets = () => {
