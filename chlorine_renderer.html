@@ -60,6 +60,7 @@
 		renderer.turn = 0;
 		renderer.tracking_type = null;
 		renderer.tracking_id = -1;
+		renderer.tracking_turn = -1;
 
 		renderer.spawn_counts = null;
 
@@ -111,7 +112,6 @@
 		renderer.finish_load = () => {
 			renderer.turn = 0;
 			renderer.tracking_type = null;
-			renderer.tracking_id = -1;
 			unitbox.innerHTML = "No selection.";
 			renderer.count_spawns();
 			renderer.draw();
@@ -348,7 +348,11 @@
 
 			// Dead. But leave the selection as it is.
 
-			unitbox.innerHTML = "(selection no longer present)";
+			if (renderer.turn > renderer.tracking_turn) {
+				unitbox.innerHTML = "(selection no longer present)";
+			} else {
+				unitbox.innerHTML = "(selection not yet present)";
+			}
 		};
 
 		renderer.click = (event) => {
@@ -373,6 +377,7 @@
 				if (dist(worldx, worldy, planet.x, planet.y) < planet.r) {
 					renderer.tracking_type = "planet";
 					renderer.tracking_id = planet.id;
+					renderer.tracking_turn = renderer.turn;
 					renderer.draw();
 					return;
 				}
@@ -410,6 +415,7 @@
 			if (best_distance < 5) {
 				renderer.tracking_type = "ship";
 				renderer.tracking_id = best_ship.id;
+				renderer.tracking_turn = renderer.turn;
 				renderer.draw();
 				return;
 			}
@@ -417,7 +423,6 @@
 			// User clicked empty space.
 
 			renderer.tracking_type = null;
-			renderer.tracking_id = -1;
 			renderer.draw();
 		};
 
