@@ -66,13 +66,22 @@
 
 		renderer.open = (filename) => {
 
+			let current_game = renderer.game;
+			let current_turn = renderer.turn;
+
 			try {
 				let contents = fs.readFileSync(filename);
 				renderer.game = JSON.parse(contents);		// If the file is compressed, we will have an exception here.
 				renderer.finish_load();						// Opening some random JSON (non-Halite) file will likely cause an exception here.
 				return;
 			}
-			catch(err) {}			// Couldn't parse raw, so try as zstd...
+			catch(err) {
+
+				// These things might have been corrupted...
+
+				renderer.game = current_game;
+				renderer.turn = current_turn;
+			}
 
 			let all_chunks = [];
 			let loading_stream = new stream.Writable();
@@ -173,6 +182,17 @@
 			unitbox.innerHTML += ` --- [ ${ship.x.toFixed(2)} , ${ship.y.toFixed(2)} ] --- ${ship.health} health`;
 			if (ship.docking.status !== "undocked") {
 				unitbox.innerHTML += ` --- <span style="color: ${colour}">${ship.docking.status}</span>`;
+			} else {
+				let command = renderer.game.moves[renderer.turn][ship.owner][0][ship.id];
+				if (command) {
+					let angle = command.angle;
+					let speed = command.magnitude;
+					if (speed && angle) {
+						unitbox.innerHTML += ` --- <span style="color: ${colour}">thrust ${speed} / ${angle % 360}</span>`;
+					} else {
+						unitbox.innerHTML += ` --- <span style="color: ${colour}">${command.type}</span>`;
+					}
+				}
 			}
 		};
 
