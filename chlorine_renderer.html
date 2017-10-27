@@ -230,7 +230,7 @@
 			renderer.send_info();
 		};
 
-		renderer.display_planet = (planet) => {
+		renderer.display_tracked_planet = (planet) => {
 			let owner_string = (planet.owner === null) ? "Unowned" : renderer.game.player_names[planet.owner];
 			let colour = (planet.owner === null) ? "white" : colours[planet.owner];
 			unitbox.innerHTML = `Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>)`;
@@ -241,7 +241,7 @@
 			}
 		};
 
-		renderer.display_ship = (ship) => {
+		renderer.display_tracked_ship = (ship) => {
 			let owner_string = renderer.game.player_names[ship.owner];
 			let colour = colours[ship.owner];
 			unitbox.innerHTML = `Ship ${ship.id} (<span style="color: ${colour}">${owner_string}</span>)`;
@@ -256,7 +256,7 @@
 						let angle = command.angle;
 						let speed = command.magnitude;
 						if (speed !== undefined && angle !== undefined) {
-							unitbox.innerHTML += ` --- next command: <span style="color: ${colour}">thrust ${speed} / ${angle % 360}</span>`;
+							unitbox.innerHTML += ` --- next command: <span style="color: ${colour}">thrust ${speed} / ${angle}</span>`;
 						} else {
 							unitbox.innerHTML += ` --- next command: <span style="color: ${colour}">${command.type}</span>`;
 						}
@@ -299,7 +299,7 @@
 			context.stroke();
 
 			context.setLineDash([]);
-		}
+		};
 
 		renderer.display_tracked = () => {
 
@@ -325,7 +325,7 @@
 						}
 
 						if (parseInt(sid, 10) === renderer.tracking_id) {
-							renderer.display_ship(frame.ships[pid][sid]);
+							renderer.display_tracked_ship(frame.ships[pid][sid]);
 							return;
 						}
 					}
@@ -340,7 +340,7 @@
 					let planet = frame_planets[n];
 
 					if (planet.id === renderer.tracking_id) {
-						renderer.display_planet(planet);
+						renderer.display_tracked_planet(planet);
 						return;
 					}
 				}
@@ -473,7 +473,6 @@
 			for (let n = 0; n < frame_planets.length; n++) {		// Note than n here doesn't match planet ID.
 
 				let planet = frame_planets[n];
-				let plid = planet.id;
 
 				let x = planet.x * scale;
 				let y = planet.y * scale;
