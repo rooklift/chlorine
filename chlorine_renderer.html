@@ -184,14 +184,17 @@
 			if (ship.docking.status !== "undocked") {
 				unitbox.innerHTML += ` --- <span style="color: ${colour}">${ship.docking.status}</span>`;
 			} else {
-				let command = renderer.game.moves[renderer.turn][ship.owner][0][ship.id];
-				if (command) {
-					let angle = command.angle;
-					let speed = command.magnitude;
-					if (speed && angle) {
-						unitbox.innerHTML += ` --- <span style="color: ${colour}">thrust ${speed} / ${angle % 360}</span>`;
-					} else {
-						unitbox.innerHTML += ` --- <span style="color: ${colour}">${command.type}</span>`;
+				let moves = renderer.game.moves[renderer.turn];
+				if (moves) {
+					let command = moves[ship.owner][0][ship.id];
+					if (command) {
+						let angle = command.angle;
+						let speed = command.magnitude;
+						if (speed && angle) {
+							unitbox.innerHTML += ` --- <span style="color: ${colour}">thrust ${speed} / ${angle % 360}</span>`;
+						} else {
+							unitbox.innerHTML += ` --- <span style="color: ${colour}">${command.type}</span>`;
+						}
 					}
 				}
 			}
