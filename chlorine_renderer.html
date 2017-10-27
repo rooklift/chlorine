@@ -109,6 +109,7 @@
 			renderer.turn = 0;
 			renderer.tracking_type = null;
 			renderer.tracking_id = -1;
+			unitbox.innerHTML = "No selection.";
 			renderer.draw();
 		};
 
@@ -199,6 +200,7 @@
 		renderer.display_tracked = () => {
 
 			if (renderer.tracking_type === null) {
+
 				return;
 			}
 
