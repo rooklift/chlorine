@@ -148,20 +148,25 @@
 			for (let n = 0; n < renderer.game.frames.length; n++) {
 
 				for (let p = 0; p < renderer.spawn_counts.length; p++) {
-					renderer.spawn_counts[p].push(0);
+					renderer.spawn_counts[p].push(renderer.spawn_counts[p][n]);
 				}
 
 				let frame = renderer.game.frames[n];
 
-				for (let i = 0; i < frame.events.length; i++) {
+				let events = frame.events;
 
-					let event = frame.events[i];
+				if (events !== undefined) {
 
-					if (event.event === "spawned") {
-						renderer.spawn_counts[event.entity.owner][n + 1]++;
+					for (let i = 0; i < events.length; i++) {		// Last frame has no events
+
+						let event = events[i];
+
+						if (event.event === "spawned") {
+							renderer.spawn_counts[event.entity.owner][n + 1]++;
+						}
 					}
-				}
-			}
+
+}			}
 		};
 
 		renderer.save = (filename) => {
@@ -651,8 +656,12 @@
 
 				lines.push(`<h2 style="color: ${colour}">${renderer.game.player_names[n]} (${rank})</h2>`);
 
-				lines.push(`<ul><li>Ships: ${ship_count}</li></ul>`);
-				lines.push(`<ul><li>Planets: ${planet_count[n]}</li></ul>`);
+				lines.push(`<ul>`);
+				lines.push(`<li>Planets: ${planet_count[n]}</li>`);
+				lines.push(`<li>Ships: ${ship_count}</li>`);
+				lines.push(`<li>Total ships: ${renderer.spawn_counts[n][renderer.turn]}</li>`);
+				lines.push(`</ul>`);
+
 			}
 
 			ipcRenderer.send("relay", {
