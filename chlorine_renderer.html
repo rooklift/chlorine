@@ -56,6 +56,7 @@
 
 		let renderer = Object.create(null);
 
+		renderer.filename = "";
 		renderer.game = null;
 		renderer.turn = 0;
 		renderer.tracking_type = null;
@@ -80,7 +81,7 @@
 			catch (err) {}
 
 			if (was_plain_json) {
-				renderer.finish_load();
+				renderer.finish_load(filename);
 				return;
 			}
 
@@ -105,12 +106,13 @@
 					} catch(err) {
 						return
 					}
-					renderer.finish_load();
+					renderer.finish_load(filename);
 				});
 			});
 		};
 
-		renderer.finish_load = () => {
+		renderer.finish_load = (filename) => {
+			renderer.filename = filename;
 			renderer.turn = 0;
 			renderer.tracking_type = null;
 			unitbox.innerHTML = "No selection.";
@@ -652,6 +654,9 @@
 			}
 
 			let lines = [];
+
+			lines.push(`<p>${renderer.filename}</p>`);
+			lines.push(`<p>${renderer.game.width} x ${renderer.game.height} (seed ${renderer.game.seed})</p>`);
 
 			for (let n = 0; n < renderer.game.num_players; n++) {
 
