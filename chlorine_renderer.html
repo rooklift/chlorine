@@ -76,7 +76,7 @@
 			try {
 				let contents = fs.readFileSync(filename);
 				renderer.game = JSON.parse(contents);
-				was_plain_json = true
+				was_plain_json = true;
 			}
 			catch (err) {}
 
@@ -104,7 +104,7 @@
 					try {
 						renderer.game = JSON.parse(all_chunks.join(""));
 					} catch(err) {
-						return
+						return;
 					}
 					renderer.finish_load(filename);
 				});
