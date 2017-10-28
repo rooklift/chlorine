@@ -59,6 +59,7 @@
 		renderer.filename = "";
 		renderer.game = null;
 		renderer.turn = 0;
+		renderer.buggy = false;
 		renderer.tracking_type = null;
 		renderer.tracking_id = -1;
 		renderer.tracking_turn = -1;
@@ -113,6 +114,7 @@
 
 		renderer.finish_load = (filename) => {
 			renderer.filename = filename;
+			renderer.buggy = false;
 			renderer.turn = 0;
 			renderer.tracking_type = null;
 			unitbox.innerHTML = "No selection.";
@@ -544,6 +546,12 @@
 
 					let ship = frame.ships[pid][sid];
 
+					// While we're looking at ships, see if we see non-zero velocities, and log that fact.
+
+					if (ship.vel_x !== 0 || ship.vel_y !== 0) {
+						renderer.buggy = true;
+					}
+
 					let x = ship.x * scale;
 					let y = ship.y * scale;
 					let r = renderer.game.constants.SHIP_RADIUS * scale;
@@ -656,7 +664,14 @@
 			let lines = [];
 
 			lines.push(`<p>${renderer.filename}</p>`);
-			lines.push(`<p>${renderer.game.width} x ${renderer.game.height} (seed ${renderer.game.seed})</p>`);
+
+
+			if (renderer.buggy) {
+				let bug_notice = `<span style="color: #ff3333;">velocity bug seen</span>`;
+				lines.push(`<p>${renderer.game.width} x ${renderer.game.height} (seed ${renderer.game.seed}) &nbsp; ${bug_notice}</p>`);
+			} else {
+				lines.push(`<p>${renderer.game.width} x ${renderer.game.height} (seed ${renderer.game.seed})</p>`);
+			}
 
 			for (let n = 0; n < renderer.game.num_players; n++) {
 
