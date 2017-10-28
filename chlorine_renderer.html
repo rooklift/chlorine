@@ -70,21 +70,18 @@
 
 		renderer.open = (filename) => {
 
-			let current_game = renderer.game;
-			let current_turn = renderer.turn;
+			let was_plain_json = false;
 
 			try {
 				let contents = fs.readFileSync(filename);
-				renderer.game = JSON.parse(contents);		// If the file is compressed, we will have an exception here.
-				renderer.finish_load();						// Opening some random JSON (non-Halite) file will likely cause an exception here.
-				return;
+				renderer.game = JSON.parse(contents);
+				was_plain_json = true
 			}
-			catch(err) {
+			catch (err) {}
 
-				// These things might have been corrupted...
-
-				renderer.game = current_game;
-				renderer.turn = current_turn;
+			if (was_plain_json) {
+				renderer.finish_load();
+				return;
 			}
 
 			let all_chunks = [];
@@ -103,7 +100,11 @@
 					alert("Couldn't load this file");
 				});
 				result.on("finish", () => {
-					renderer.game = JSON.parse(all_chunks.join(""));
+					try {
+						renderer.game = JSON.parse(all_chunks.join(""));
+					} catch(err) {
+						return
+					}
 					renderer.finish_load();
 				});
 			});
