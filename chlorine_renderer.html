@@ -225,7 +225,7 @@
 			renderer.draw_events();
 
 			let turn_string = `${renderer.turn} / ${renderer.game.frames.length - 1}`;
-			document.title = renderer.game.player_names.join(" / ") + " --- " + turn_string;
+			document.title = renderer.game.player_names.join(" / ") + " &mdash; " + turn_string;
 
 			renderer.send_info();
 		};
@@ -233,8 +233,9 @@
 		renderer.display_tracked_planet = (planet) => {
 			let owner_string = (planet.owner === null) ? "Unowned" : renderer.game.player_names[planet.owner];
 			let colour = (planet.owner === null) ? "white" : colours[planet.owner];
-			unitbox.innerHTML = `Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>)`;
-			unitbox.innerHTML += ` --- ${planet.health} health --- ${planet.docking_spots} spots`;
+			unitbox.innerHTML = ` Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>)`;
+			unitbox.innerHTML += ` &mdash; [ ${planet.x.toFixed(2)} , ${planet.y.toFixed(2)} ]`;
+			unitbox.innerHTML += ` &mdash; ${planet.health} health &mdash; ${planet.docking_spots} spots &mdash; ${planet.r.toFixed(2)} radius`;
 
 			if (renderer.crosshair) {
 				renderer.draw_crosshair(planet);
@@ -245,9 +246,9 @@
 			let owner_string = renderer.game.player_names[ship.owner];
 			let colour = colours[ship.owner];
 			unitbox.innerHTML = `Ship ${ship.id} (<span style="color: ${colour}">${owner_string}</span>)`;
-			unitbox.innerHTML += ` --- [ ${ship.x.toFixed(2)} , ${ship.y.toFixed(2)} ] --- ${ship.health} health`;
+			unitbox.innerHTML += ` &mdash; [ ${ship.x.toFixed(2)} , ${ship.y.toFixed(2)} ] &mdash; ${ship.health} health`;
 			if (ship.docking.status !== "undocked") {
-				unitbox.innerHTML += ` --- <span style="color: ${colour}">${ship.docking.status}</span>`;
+				unitbox.innerHTML += ` &mdash; <span style="color: ${colour}">${ship.docking.status}</span>`;
 			} else {
 				let moves = renderer.game.moves[renderer.turn];
 				if (moves) {
@@ -256,9 +257,9 @@
 						let angle = command.angle;
 						let speed = command.magnitude;
 						if (speed !== undefined && angle !== undefined) {
-							unitbox.innerHTML += ` --- next command: <span style="color: ${colour}">thrust ${speed} / ${angle}</span>`;
+							unitbox.innerHTML += ` &mdash; next command: <span style="color: ${colour}">thrust ${speed} / ${angle}</span>`;
 						} else {
-							unitbox.innerHTML += ` --- next command: <span style="color: ${colour}">${command.type}</span>`;
+							unitbox.innerHTML += ` &mdash; next command: <span style="color: ${colour}">${command.type}</span>`;
 						}
 					}
 				}
