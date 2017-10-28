@@ -225,7 +225,7 @@
 			renderer.draw_events();
 
 			let turn_string = `${renderer.turn} / ${renderer.game.frames.length - 1}`;
-			document.title = renderer.game.player_names.join(" / ") + " &mdash; " + turn_string;
+			document.title = renderer.game.player_names.join(" / ") + " --- " + turn_string;
 
 			renderer.send_info();
 		};
