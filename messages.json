@@ -1,0 +1,5 @@
+{
+	"info": "You can put message lookups in this file for the Angle Message parser. The ones here are what I'm using, but you can replace everything.",
+	"121":	"ship",
+	"180":	"no target"
+}

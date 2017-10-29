@@ -72,6 +72,12 @@
 		renderer.precise = false;
 		renderer.angle_messages = true;
 
+		try {
+			renderer.message_lookup = JSON.parse(fs.readFileSync("messages.json"));
+		} catch(err) {
+			renderer.message_lookup = Object.create(null);
+		}
+
 		renderer.open = (filename) => {
 
 			let was_plain_json = false;
@@ -269,6 +275,9 @@
 							let angle_string = angle.toString();
 							if (renderer.angle_messages && angle >= 360) {
 								let message = Math.floor(angle / 360) - 1;
+								if (renderer.message_lookup[message] !== undefined) {
+									message = `"${renderer.message_lookup[message]}"`;
+								}
 								angle_string = `${angle % 360} (message: ${message})`;
 							}
 							unitbox.innerHTML += ` &mdash; next command: <span style="color: ${colour}">thrust ${speed} / ${angle_string}</span>`;
