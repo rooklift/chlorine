@@ -132,6 +132,9 @@ function make_main_menu() {
 					}
 				},
 				{
+					type: "separator"
+				},
+				{
 					label: "Toggle Selection Crosshair",
 					click: () => {
 						windows.send("renderer", "toggle", "crosshair");
@@ -141,6 +144,15 @@ function make_main_menu() {
 					label: "Toggle High Precision Coordinates",
 					click: () => {
 						windows.send("renderer", "toggle", "precise");
+					}
+				},
+				{
+					type: "separator"
+				},
+				{
+					label: "Toggle Angle Message Interpretation",		// Consider angles >= 360 as encoding a number...
+					click: () => {
+						windows.send("renderer", "toggle", "angle_messages");
 					}
 				},
 			]

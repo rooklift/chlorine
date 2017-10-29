@@ -70,6 +70,7 @@
 		renderer.docking_ranges = false;
 		renderer.crosshair = true;
 		renderer.precise = false;
+		renderer.angle_messages = false;
 
 		renderer.open = (filename) => {
 
@@ -262,10 +263,15 @@
 				if (moves) {
 					let command = moves[ship.owner][0][ship.id];
 					if (command) {
-						let angle = command.angle;
 						let speed = command.magnitude;
+						let angle = command.angle;
 						if (speed !== undefined && angle !== undefined) {
-							unitbox.innerHTML += ` &mdash; next command: <span style="color: ${colour}">thrust ${speed} / ${angle}</span>`;
+							let angle_string = angle.toString();
+							if (renderer.angle_messages && angle >= 360) {
+								let message = Math.floor(angle / 360) - 1;
+								angle_string = `${angle % 360} (message: ${message})`;
+							}
+							unitbox.innerHTML += ` &mdash; next command: <span style="color: ${colour}">thrust ${speed} / ${angle_string}</span>`;
 						} else {
 							unitbox.innerHTML += ` &mdash; next command: <span style="color: ${colour}">${command.type}</span>`;
 						}
