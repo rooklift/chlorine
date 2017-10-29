@@ -155,6 +155,12 @@ function make_main_menu() {
 						windows.send("renderer", "toggle", "angle_messages");
 					}
 				},
+				{
+					label: "About Angle Messages...",
+					click: () => {
+						about_angle_messages();
+					}
+				},
 			]
 		},
 		{
@@ -177,4 +183,35 @@ function make_main_menu() {
 	];
 
 	return electron.Menu.buildFromTemplate(template);
+}
+
+function about_angle_messages() {
+
+	let s = `
+	Tired of being unable to use logs on the server?
+	Be tired no more! Introducing Chlorine's patented
+	angle message system! Exploit the redundancy of
+	Halite's angles to send messages to yourself!
+
+	How it works:
+
+	A Halite angle is an unsigned int16. There are
+	just over 180 ways of sending the same angle.
+
+	Chlorine can interpret ship movements with angles
+	>= 359 as sending messages, where each message is
+	a number in the range 0..180.
+
+	To encode:
+
+	    def new_angle_with_message(angle, message):
+	        return ((message + 1) * 360) + angle
+
+	Then use the new angle when sending the ship's
+	thrust to the server.
+
+	Chlorine can show the message in the ship info.
+	`
+
+	alert(s)
 }
