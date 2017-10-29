@@ -199,7 +199,7 @@ function about_angle_messages() {
 	just over 180 ways of sending the same angle.
 
 	Chlorine can interpret ship movements with angles
-	>= 359 as sending messages, where each message is
+	>= 360 as sending messages, where each message is
 	a number in the range 0..180.
 
 	To encode:
