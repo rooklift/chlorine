@@ -137,6 +137,12 @@ function make_main_menu() {
 						windows.send("renderer", "toggle", "crosshair");
 					}
 				},
+				{
+					label: "Toggle High Precision Coordinates",
+					click: () => {
+						windows.send("renderer", "toggle", "precise");
+					}
+				},
 			]
 		},
 		{
