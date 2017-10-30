@@ -30,6 +30,9 @@ module.exports = (msg) => {
 	if (typeof(msg) === "undefined") {
 		msg = "undefined";
 	}
+	if (typeof(msg) === "number") {
+		msg = msg.toString();
+	}
 	msg = msg.trim()
 	if (process.type === "renderer") {
 		alert_renderer(msg);

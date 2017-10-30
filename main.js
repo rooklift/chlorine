@@ -9,8 +9,9 @@ const windows = require("./modules/windows");
 // -------------------------------------------------------
 
 electron.app.on("ready", () => {
-	windows.new("renderer", {show: true, width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine_renderer.html")});
-	windows.new("info", {show: false, width: 400, height: 600, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
+	windows.new("renderer", {title: "Chlorine", show: true, width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine_renderer.html")});
+	windows.new("info", {title: "Info", show: false, width: 400, height: 600, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
+	windows.new("events", {title: "Events", show: false, width: 400, height: 600, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
 	electron.Menu.setApplicationMenu(make_main_menu());
 });
 
@@ -191,6 +192,12 @@ function make_main_menu() {
 					label: "Info",
 					click: () => {
 						windows.show("info");
+					}
+				},
+				{
+					label: "Events",
+					click: () => {
+						windows.show("events");
 					}
 				},
 			]

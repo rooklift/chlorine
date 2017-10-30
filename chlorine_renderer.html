@@ -52,6 +52,19 @@
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 
+	function event_entity_sorter(a, b) {
+
+		if (a.entity.owner === undefined) { a.entity.owner = -1; }
+		if (b.entity.owner === undefined) { b.entity.owner = -1; }
+
+		if (a.entity.owner < b.entity.owner) { return -1 };
+		if (a.entity.owner === b.entity.owner) {
+			if (a.entity.id < b.entity.id) { return -1 };
+			return 1;
+		}
+		return 1;
+	}
+
 	function make_renderer() {
 
 		let renderer = Object.create(null);
@@ -222,6 +235,20 @@
 			renderer.draw();
 		};
 
+		renderer.select_ship = (id) => {
+			renderer.tracking_type = "ship";
+			renderer.tracking_id = id;
+			renderer.tracking_turn = renderer.turn;
+			renderer.draw();
+		};
+
+		renderer.select_planet = (id) => {
+			renderer.tracking_type = "planet";
+			renderer.tracking_id = id;
+			renderer.tracking_turn = renderer.turn;
+			renderer.draw();
+		};
+
 		renderer.draw = () => {
 
 			canvas.width = window.innerWidth;
@@ -243,6 +270,7 @@
 			document.title = renderer.game.player_names.join(" / ") + " --- " + turn_string;
 
 			renderer.send_info();
+			renderer.send_events();
 		};
 
 		renderer.display_tracked_planet = (planet) => {
@@ -735,7 +763,6 @@
 
 			lines.push(`<p>${renderer.filename}</p>`);
 
-
 			if (renderer.buggy) {
 				let bug_notice = `<span style="color: #ff3333;">velocity bug seen</span>`;
 				lines.push(`<p>${renderer.game.width} x ${renderer.game.height} (seed ${renderer.game.seed}) &nbsp; ${bug_notice}</p>`);
@@ -772,6 +799,96 @@
 			});
 		};
 
+		renderer.send_events = () => {
+
+			let frame = renderer.game.frames[renderer.turn];
+			let previous_frame = renderer.game.frames[renderer.turn - 1];
+
+			let events = frame.events;
+
+			let map = Object.create(null);
+
+			for (let n = 0; n < events.length; n++) {
+				let event = events[n];
+				if (map[event.event] === undefined) {
+					map[event.event] = [];
+				}
+				map[event.event].push(event);
+			}
+
+			let lines = [];
+
+			lines.push(`<p>Note: all events happen <i>after</i> this turn.</p>`);
+			lines.push(`<p>Click to select.</p>`);
+
+			lines.push(`<h2>Attacks</h2>`);
+
+			if (map.attack) {
+
+				map.attack.sort(event_entity_sorter);
+
+				lines.push(`<ul>`);
+				for (let n = 0; n < map.attack.length; n++) {
+
+					let event = map.attack[n];
+					let attacker_colour = colours[event.entity.owner];
+					let target_strings = [];
+
+					for (let i = 0; i < event.target_locations.length; i++) {
+						let tl = event.target_locations[i];
+						target_strings.push(`<span style="color: ${colours[tl.owner]}" onclick="select_ship(${tl.id})">${tl.id}</span>`);
+					}
+
+					lines.push(
+						`<li><span style="color: ${attacker_colour}" onclick="select_ship(${event.entity.id})">
+						ship ${event.entity.id}</span> ==> ${target_strings.join(", ")}</li>`
+					);
+				}
+				lines.push(`</ul>`);
+			}
+
+			lines.push(`<h2>Deaths</h2>`);
+
+			if (map.destroyed) {
+
+				map.destroyed.sort(event_entity_sorter);
+
+				lines.push(`<ul>`);
+				for (let n = 0; n < map.destroyed.length; n++) {
+					let event = map.destroyed[n];
+					let etype = event.entity.type;
+					lines.push(
+						`<li><span style="color: ${colours[event.entity.owner]}" onclick="select_ship(${event.entity.id})">
+						${etype} ${event.entity.id}</span></li>`
+					);
+				}
+				lines.push(`</ul>`);
+			}
+
+			lines.push(`<h2>Spawns</h2>`);
+
+			if (map.spawned) {
+
+				map.spawned.sort(event_entity_sorter);
+
+				lines.push(`<ul>`);
+				for (let n = 0; n < map.spawned.length; n++) {
+
+					let event = map.spawned[n];
+					let colour = colours[event.entity.owner];
+
+					lines.push(`<li><span style="color: ${colour}" onclick="select_ship(${event.entity.id})">ship ${event.entity.id}</span></li>`);
+				}
+				lines.push(`</ul>`);
+			}
+
+			ipcRenderer.send("relay", {
+				receiver: "events",
+				channel: "update",
+				content: lines.join(""),
+			});
+		}
+
 		return renderer;
 	}
 
@@ -791,6 +908,10 @@
 
 	ipcRenderer.on("toggle", (event, varname) => {
 		renderer.toggle(varname);
+	});
+
+	ipcRenderer.on("select_ship", (event, sid) => {
+		renderer.select_ship(sid);
 	});
 
 	window.addEventListener("resize", () => renderer.draw());
