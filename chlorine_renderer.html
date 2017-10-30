@@ -803,9 +803,11 @@
 		renderer.send_events = () => {
 
 			let frame = renderer.game.frames[renderer.turn];
-			let previous_frame = renderer.game.frames[renderer.turn - 1];
-
 			let events = frame.events;
+
+			if (events === undefined) {
+				events = [];
+			}
 
 			let map = Object.create(null);
 
