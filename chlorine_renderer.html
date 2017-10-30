@@ -549,13 +549,15 @@
 
 			let frame_planets = renderer.current_planets();
 
-			for (let n = 0; n < frame_planets.length; n++) {		// Note than n here doesn't match planet ID.
+			for (let n = 0; n < frame_planets.length; n++) {					// Note than n here doesn't match planet ID.
 
 				let planet = frame_planets[n];
 
 				let x = planet.x * scale;
 				let y = planet.y * scale;
 				let r = planet.r * scale;
+
+				let adjusted_r = Math.max(1, r - PLANET_LINE_THICKNESS / 2)		// Compensate for line thickness so the planet's edge is correct.
 
 				if (planet.owner === null) {
 					context.strokeStyle = "gray";
@@ -565,7 +567,7 @@
 
 				context.lineWidth = PLANET_LINE_THICKNESS;
 				context.beginPath();
-				context.arc(x, y, r - PLANET_LINE_THICKNESS / 2, 0, Math.PI * 2, true);
+				context.arc(x, y, adjusted_r, 0, Math.PI * 2, true);
 				context.stroke();
 
 				if (renderer.docking_ranges) {
