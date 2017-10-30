@@ -135,6 +135,21 @@ function make_main_menu() {
 					type: "separator"
 				},
 				{
+					label: "Toggle Tails",
+					click: () => {
+						windows.send("renderer", "toggle", "tails");
+					}
+				},
+				{
+					label: "Toggle Pointers",
+					click: () => {
+						windows.send("renderer", "toggle", "pointers");
+					}
+				},
+				{
+					type: "separator"
+				},
+				{
 					label: "Toggle Selection Crosshair",
 					click: () => {
 						windows.send("renderer", "toggle", "crosshair");
