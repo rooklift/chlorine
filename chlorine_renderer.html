@@ -57,9 +57,9 @@
 		if (a.entity.owner === undefined) { a.entity.owner = -1; }
 		if (b.entity.owner === undefined) { b.entity.owner = -1; }
 
-		if (a.entity.owner < b.entity.owner) { return -1 };
+		if (a.entity.owner < b.entity.owner) { return -1; }
 		if (a.entity.owner === b.entity.owner) {
-			if (a.entity.id < b.entity.id) { return -1 };
+			if (a.entity.id < b.entity.id) { return -1; }
 			return 1;
 		}
 		return 1;
@@ -503,7 +503,7 @@
 			}
 
 			return ret;
-		}
+		};
 
 		renderer.current_planets = () => {
 
@@ -892,7 +892,7 @@
 				channel: "update",
 				content: lines.join(""),
 			});
-		}
+		};
 
 		return renderer;
 	}
