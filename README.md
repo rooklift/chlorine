@@ -1,4 +1,4 @@
-# chlorine
+# Chlorine
 Replay viewer for [Halite2](https://halite.io/), in JavaScript (Electron).
 
 # Installation
