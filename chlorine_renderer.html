@@ -244,7 +244,7 @@
 
 		renderer.select_planet = (id) => {
 			renderer.tracking_type = "planet";
-			renderer.tracking_id = id;
+			renderer.tracking_id = id.toString();		// FIXME: the code below implicitly assumes these things are strings
 			renderer.tracking_turn = renderer.turn;
 			renderer.draw();
 		};
@@ -394,6 +394,7 @@
 					let planet = frame_planets[n];
 
 					if (planet.id === renderer.tracking_id) {
+
 						renderer.display_tracked_planet(planet);
 						return;
 					}
@@ -857,9 +858,11 @@
 				for (let n = 0; n < map.destroyed.length; n++) {
 					let event = map.destroyed[n];
 					let etype = event.entity.type;
+					let colour = etype === "ship" ? colours[event.entity.owner] : "#ffffff";
+
 					lines.push(
-						`<li><span style="color: ${colours[event.entity.owner]}" onclick="select_ship(${event.entity.id})">
-						${etype} ${event.entity.id}</span></li>`
+						`<li><span style="color: ${colour}" onclick="select_${etype}(${event.entity.id})">
+								${etype} ${event.entity.id}</span></li>`
 					);
 				}
 				lines.push(`</ul>`);
@@ -910,8 +913,12 @@
 		renderer.toggle(varname);
 	});
 
-	ipcRenderer.on("select_ship", (event, sid) => {
-		renderer.select_ship(sid);
+	ipcRenderer.on("select_ship", (event, id) => {
+		renderer.select_ship(id);
+	});
+
+	ipcRenderer.on("select_planet", (event, id) => {
+		renderer.select_planet(id);
 	});
 
 	window.addEventListener("resize", () => renderer.draw());
