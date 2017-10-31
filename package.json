@@ -1,6 +1,6 @@
 {
 	"name"    : "Chlorine",
-	"version" : "1.0.2",
+	"version" : "1.0.3",
 	"main"    : "main.js",
 	"dependencies": {
 		"node-zstandard": "1.2.4"

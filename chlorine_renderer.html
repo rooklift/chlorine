@@ -211,6 +211,30 @@
 			fs.writeFileSync(filename, JSON.stringify(renderer.game, null, "\t"));
 		};
 
+		renderer.save_frame = (filename) => {
+
+			if (!filename || !renderer.game) {
+				return;
+			}
+
+			fs.writeFileSync(filename, JSON.stringify(renderer.game.frames[renderer.turn], null, "\t"));
+		};
+
+		renderer.save_moves = (filename) => {
+
+			if (!filename || !renderer.game) {
+				return;
+			}
+
+			let s = "";
+			let moves = renderer.game.moves[renderer.turn];
+			if (moves) {
+				s = JSON.stringify(moves, null, "\t");
+			}
+
+			fs.writeFileSync(filename, s);
+		};
+
 		renderer.forward = (n) => {		// Negative arguments are allowed (go back).
 
 			if (!renderer.game) {
@@ -940,6 +964,14 @@
 
 	ipcRenderer.on("save", (event, filename) => {
 		renderer.save(filename);
+	});
+
+	ipcRenderer.on("save_frame", (event, filename) => {
+		renderer.save_frame(filename);
+	});
+
+	ipcRenderer.on("save_moves", (event, filename) => {
+		renderer.save_moves(filename);
 	});
 
 	ipcRenderer.on("forward", (event, n) => {

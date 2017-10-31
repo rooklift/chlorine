@@ -58,6 +58,9 @@ function make_main_menu() {
 					}
 				},
 				{
+					type: "separator"
+				},
+				{
 					label: "Save decompressed JSON...",
 					accelerator: "CommandOrControl+S",
 					click: () => {
@@ -68,9 +71,28 @@ function make_main_menu() {
 					}
 				},
 				{
+					label: "Save current entities...",
+					click: () => {
+						let outfilename = electron.dialog.showSaveDialog();
+						if (outfilename) {
+							windows.send("renderer", "save_frame", outfilename);
+						}
+					}
+				},
+				{
+					label: "Save current moves...",
+					click: () => {
+						let outfilename = electron.dialog.showSaveDialog();
+						if (outfilename) {
+							windows.send("renderer", "save_moves", outfilename);
+						}
+					}
+				},
+				{
 					type: "separator"
 				},
 				{
+					accelerator: "CommandOrControl+Q",
 					role: "quit"
 				},
 				{
