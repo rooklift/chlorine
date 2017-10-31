@@ -52,7 +52,7 @@
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 
-	function event_entity_sorter(a, b) {
+	function event_sorter(a, b) {
 
 		if (a.entity.owner === undefined) { a.entity.owner = -1; }
 		if (b.entity.owner === undefined) { b.entity.owner = -1; }
@@ -826,11 +826,13 @@
 			lines.push(`<p>Note: all events happen <i>after</i> this turn.</p>`);
 			lines.push(`<p>Click to select.</p>`);
 
+			// ------------------------------------------------------------------------
+
 			lines.push(`<h2>Attacks</h2>`);
 
 			if (map.attack) {
 
-				map.attack.sort(event_entity_sorter);
+				map.attack.sort(event_sorter);
 
 				lines.push(`<ul>`);
 				for (let n = 0; n < map.attack.length; n++) {
@@ -852,11 +854,38 @@
 				lines.push(`</ul>`);
 			}
 
+			// ------------------------------------------------------------------------
+
+			lines.push(`<h2>Contended Docking</h2>`);
+
+			if (map.contention) {
+
+				map.contention.sort(event_sorter);
+
+				lines.push(`<ul>`);
+				for (let n = 0; n < map.contention.length; n++) {
+
+					let event = map.contention[n];
+					let planet_string = `<span onclick="select_planet(${event.entity.id})">planet ${event.entity.id}</span>`
+					let ship_strings = [];
+
+					for (let i = 0; i < event.participants.length; i++) {
+						let ship = event.participants[i];
+						let colour = colours[ship.owner];
+						ship_strings.push(`<span style="color: ${colour}" onclick="select_ship(${ship.id})">${ship.id}</span>`);
+					}
+					lines.push(`<li>${planet_string} by ${ship_strings.join(", ")}</li>`);
+				}
+				lines.push(`</ul>`);
+			}
+
+			// ------------------------------------------------------------------------
+
 			lines.push(`<h2>Deaths</h2>`);
 
 			if (map.destroyed) {
 
-				map.destroyed.sort(event_entity_sorter);
+				map.destroyed.sort(event_sorter);
 
 				lines.push(`<ul>`);
 				for (let n = 0; n < map.destroyed.length; n++) {
@@ -872,11 +901,13 @@
 				lines.push(`</ul>`);
 			}
 
+			// ------------------------------------------------------------------------
+
 			lines.push(`<h2>Spawns</h2>`);
 
 			if (map.spawned) {
 
-				map.spawned.sort(event_entity_sorter);
+				map.spawned.sort(event_sorter);
 
 				lines.push(`<ul>`);
 				for (let n = 0; n < map.spawned.length; n++) {
@@ -888,6 +919,8 @@
 				}
 				lines.push(`</ul>`);
 			}
+
+			// ------------------------------------------------------------------------
 
 			ipcRenderer.send("relay", {
 				receiver: "events",
