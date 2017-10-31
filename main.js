@@ -3,7 +3,7 @@
 const alert = require("./modules/alert");
 const electron = require("electron");
 const ipcMain = require("electron").ipcMain;
-const path = require("path")
+const path = require("path");
 const windows = require("./modules/windows");
 
 // -------------------------------------------------------
