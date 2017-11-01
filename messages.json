@@ -1,5 +1,8 @@
 {
-	"info": "You can put message lookups in this file for the Angle Message parser. The ones here are what I'm using, but you can replace everything.",
-	"121":	"ship",
+	"info":	"You can put message lookups in this file for the Angle Message parser. The ones here are what I'm using, but you can replace everything.",
+	"121":	"attack docked",
+	"122":	"orbit fight",
+	"150":	"deactivated",
+	"179":	"docking approach",
 	"180":	"no target"
 }
