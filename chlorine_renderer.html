@@ -58,6 +58,20 @@
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 
+	function deg_to_rad(d) {
+		return d / 180 * Math.PI;
+	}
+
+	function projection(x1, y1, distance, degrees) {			// Given a coordinate, a distance and an angle, find a new coordinate.
+		if (distance == 0) {
+			return [x1, y1];
+		}
+		let radians = deg_to_rad(degrees);
+		let x2 = distance * Math.cos(radians) + x1;
+		let y2 = distance * Math.sin(radians) + y1;
+		return [x2, y2];
+	}
+
 	function event_sorter(a, b) {
 
 		if (a.entity.owner === undefined) { a.entity.owner = -1; }
@@ -711,17 +725,16 @@
 
 					if (renderer.pointers && next_frame !== null) {
 
-						let next_ship = null;
+						let player_orders = renderer.game.moves[renderer.turn][pid][0];
 
-						if (ships_destroyed_map[sid] !== undefined) {
-							next_ship = ships_destroyed_map[sid];
-						} else {
-							next_ship = next_frame.ships[pid][sid];
-						}
+						let order = player_orders[sid];
 
-						if (next_ship) {
-							let x2 = next_ship.x * scale;
-							let y2 = next_ship.y * scale;
+						if (order !== undefined && order.type === "thrust") {
+
+							let [intended_x, intended_y] = projection(ship.x, ship.y, order.magnitude, order.angle);
+
+							let x2 = intended_x * scale;
+							let y2 = intended_y * scale;
 							context.lineWidth = 1;
 							context.strokeStyle = colours[parseInt(pid, 10)];
 							context.beginPath();
