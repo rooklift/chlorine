@@ -13,8 +13,8 @@
 			cursor: default;
 			overflow: hidden;
 		}
-		#unitbox {
-			margin: 10px;		/* calculation below of unitbox total size relies on this */
+		#info_line {
+			margin: 10px;		/* calculation below of info_line_height total size relies on this */
 			border: 0;
 			padding: 0;
 			overflow: hidden;
@@ -23,7 +23,10 @@
 </head>
 <body>
 
-<p id="unitbox">Starting up...</p>
+<table style="width: calc(100% - 20px);" id="info_line"><tr>
+	<td id="unitbox">Starting up...</td>
+	<td align="right" id="measurebox"></span></td>
+</tr></table>
 <canvas id="canvas" width="0" height="0"></canvas>
 
 <script>
@@ -41,11 +44,13 @@
 	const stream = require("stream");
 	const zstd = require("node-zstandard");
 
+	const info_line = document.getElementById("info_line");
 	const unitbox = document.getElementById("unitbox");
+	const measurebox = document.getElementById("measurebox");
 	const canvas = document.getElementById("canvas");
 	const context = canvas.getContext("2d");
 
-	const unitboxheight = unitbox.offsetHeight + 20;		// relies on #unitbox having margin of 10
+	const info_line_height = info_line.offsetHeight + 20;		// relies on #info_line having margin of 10
 
 	function dist(x1, y1, x2, y2) {
 		let dx = x2 - x1;
@@ -87,6 +92,8 @@
 		renderer.crosshair = true;
 		renderer.precise = false;
 		renderer.angle_messages = true;
+
+		renderer.measure_entity = null;
 
 		try {
 			renderer.message_lookup = JSON.parse(fs.readFileSync("messages.json"));
@@ -243,6 +250,7 @@
 			}
 
 			renderer.turn += n;
+			renderer.measure_reset();
 
 			if (renderer.turn < 0) {
 				renderer.turn = 0;
@@ -277,7 +285,7 @@
 		renderer.draw = () => {
 
 			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight - unitboxheight;
+			canvas.height = window.innerHeight - info_line_height;
 
 			if (!renderer.game) {
 				return;
@@ -435,6 +443,19 @@
 			}
 		};
 
+		renderer.measure_reset = () => {
+			measurebox.innerHTML = "";
+			renderer.measure_entity = null;
+		}
+
+		renderer.measure = (entity) => {
+			if (renderer.measure_entity !== null) {
+				let d = dist(renderer.measure_entity.x, renderer.measure_entity.y, entity.x, entity.y);
+				measurebox.innerHTML = `(dist: ${d.toFixed(6)})`;
+			}
+			renderer.measure_entity = entity;
+		};
+
 		renderer.click = (event) => {
 
 			if (!renderer.game) {
@@ -458,6 +479,7 @@
 					renderer.tracking_type = "planet";
 					renderer.tracking_id = planet.id;
 					renderer.tracking_turn = renderer.turn;
+					renderer.measure(planet);
 					renderer.draw();
 					return;
 				}
@@ -496,6 +518,7 @@
 				renderer.tracking_type = "ship";
 				renderer.tracking_id = best_ship.id;
 				renderer.tracking_turn = renderer.turn;
+				renderer.measure(best_ship);
 				renderer.draw();
 				return;
 			}
@@ -503,6 +526,7 @@
 			// User clicked empty space.
 
 			renderer.tracking_type = null;
+			renderer.measure_reset();
 			renderer.draw();
 		};
 
@@ -1010,7 +1034,7 @@
 	};
 
 	canvas.width = window.innerWidth;
-	canvas.height = window.innerHeight - unitboxheight;
+	canvas.height = window.innerHeight - info_line_height;
 
 	// Give the window and canvas a little time to settle... (may prevent sudden jerk during load).
 
