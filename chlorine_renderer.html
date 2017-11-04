@@ -34,6 +34,7 @@
 	"use strict";
 
 	const colours = ["#eeaaee", "#63ceca", "#ffbe00", "#c5ec98"];
+    const dark_colours = ["#9b6c9b", "#336a66", "#a17b00", "#708a51"];
 	const ranks = ["..", "1st", "2nd", "3rd", "4th"];
 
 	const PLANET_LINE_THICKNESS = 4;
@@ -736,7 +737,7 @@
 							let x2 = intended_x * scale;
 							let y2 = intended_y * scale;
 							context.lineWidth = 1;
-							context.strokeStyle = colours[parseInt(pid, 10)];
+							context.strokeStyle = dark_colours[parseInt(pid, 10)];
 							context.beginPath();
 							context.moveTo(x, y);
 							context.lineTo(x2, y2);
