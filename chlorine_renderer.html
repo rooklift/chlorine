@@ -885,12 +885,82 @@
 
 			let lines = [];
 
-			lines.push(`<p>Note: all events happen <i>after</i> this turn.</p>`);
-			lines.push(`<p>Click to select.</p>`);
+			lines.push(`<p>Note: all events happen <i>after</i> this turn.<br>Click to select.</p>`);
 
 			// ------------------------------------------------------------------------
 
-			lines.push(`<h2>Attacks</h2>`);
+			lines.push(`<p style="color: #ffcccc">Ship/Ship Collisions</p>`);
+
+			if (map.destroyed) {
+
+				let destructions_by_time = {};
+				let collisions = [];
+
+				for (let n = 0; n < map.destroyed.length; n++) {
+
+					let event = map.destroyed[n];
+
+					if (event.time !== 0) {
+						if (destructions_by_time[event.time] === undefined) {
+							destructions_by_time[event.time] = [];
+						}
+						destructions_by_time[event.time].push(event);
+					}
+				}
+
+				for (let t in destructions_by_time) {
+
+					if (destructions_by_time.hasOwnProperty(t) === false) {
+						continue;
+					}
+
+					for (let a = 0; a < destructions_by_time[t].length; a++) {
+
+						for (let b = a + 1; b < destructions_by_time[t].length; b++) {
+
+							let x1 = destructions_by_time[t][a].x;
+							let y1 = destructions_by_time[t][a].y;
+							let x2 = destructions_by_time[t][b].x;
+							let y2 = destructions_by_time[t][b].y;
+
+							if (dist(x1, y1, x2, y2) <= 1.001) {		// I've seen slightly > 1
+
+								let c = {
+									ship1: destructions_by_time[t][a].entity.id,
+									ship2: destructions_by_time[t][b].entity.id,
+									colour1: colours[destructions_by_time[t][a].entity.owner],
+									colour2: colours[destructions_by_time[t][b].entity.owner],
+								};
+
+								collisions.push(c);
+							}
+						}
+					}
+				}
+
+				if (collisions.length > 0) {
+
+					lines.push(`<ul>`);
+
+					for (let n = 0; n < collisions.length; n++) {
+
+						let c = collisions[n];
+
+						lines.push(
+							`<li>
+							<span style="color: ${c.colour1}" onclick="select_ship(${c.ship1})">ship ${c.ship1}</span> <=>
+							<span style="color: ${c.colour2}" onclick="select_ship(${c.ship2})">ship ${c.ship2}</span>
+							</li>`
+						);
+					}
+
+					lines.push(`</ul>`);
+				}
+			}
+
+			// ------------------------------------------------------------------------
+
+			lines.push(`<p style="color: #ffcccc">Attacks</p>`);
 
 			if (map.attack) {
 
@@ -918,7 +988,7 @@
 
 			// ------------------------------------------------------------------------
 
-			lines.push(`<h2>Contended Docking</h2>`);
+			lines.push(`<p style="color: #ffcccc">Contended Docking</p>`);
 
 			if (map.contention) {
 
@@ -943,7 +1013,7 @@
 
 			// ------------------------------------------------------------------------
 
-			lines.push(`<h2>Deaths</h2>`);
+			lines.push(`<p style="color: #ffcccc">Deaths</p>`);
 
 			if (map.destroyed) {
 
@@ -965,7 +1035,7 @@
 
 			// ------------------------------------------------------------------------
 
-			lines.push(`<h2>Spawns</h2>`);
+			lines.push(`<p style="color: #ffcccc">Spawns</p>`);
 
 			if (map.spawned) {
 
