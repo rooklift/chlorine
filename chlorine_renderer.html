@@ -706,7 +706,7 @@
 						context.strokeStyle = colours[parseInt(pid, 10)];
 						context.lineWidth = 1;
 						context.beginPath();
-						context.arc(x, y, renderer.game.constants.WEAPON_RADIUS * scale, 0, Math.PI * 2, true);
+						context.arc(x, y, (renderer.game.constants.WEAPON_RADIUS + renderer.game.constants.SHIP_RADIUS * 2) * scale, 0, Math.PI * 2, true);
 						context.stroke();
 					}
 
