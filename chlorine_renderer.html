@@ -34,7 +34,7 @@
 	"use strict";
 
 	const colours = ["#eeaaee", "#63ceca", "#ffbe00", "#c5ec98"];
-    const dark_colours = ["#9b6c9b", "#336a66", "#a17b00", "#708a51"];
+	const dark_colours = ["#9b6c9b", "#336a66", "#a17b00", "#708a51"];
 	const ranks = ["..", "1st", "2nd", "3rd", "4th"];
 
 	const PLANET_LINE_THICKNESS = 4;
@@ -64,7 +64,7 @@
 	}
 
 	function projection(x1, y1, distance, degrees) {			// Given a coordinate, a distance and an angle, find a new coordinate.
-		if (distance == 0) {
+		if (distance === 0) {
 			return [x1, y1];
 		}
 		let radians = deg_to_rad(degrees);
@@ -461,7 +461,7 @@
 		renderer.measure_reset = () => {
 			measurebox.innerHTML = "";
 			renderer.measure_entity = null;
-		}
+		};
 
 		renderer.measure = (entity) => {
 			if (renderer.measure_entity !== null) {
@@ -621,7 +621,7 @@
 				let y = planet.y * scale;
 				let r = planet.r * scale;
 
-				let adjusted_r = Math.max(1, r - PLANET_LINE_THICKNESS / 2)		// Compensate for line thickness so the planet's edge is correct.
+				let adjusted_r = Math.max(1, r - PLANET_LINE_THICKNESS / 2);	// Compensate for line thickness so the planet's edge is correct.
 
 				if (planet.owner === null) {
 					context.strokeStyle = "gray";
@@ -670,8 +670,6 @@
 			let frame = renderer.game.frames[renderer.turn];
 			let previous_frame = (renderer.turn <= 0) ? null : renderer.game.frames[renderer.turn - 1];
 			let next_frame = (renderer.turn > renderer.game.frames.length - 2) ? null : renderer.game.frames[renderer.turn + 1];
-
-			let ships_destroyed_map = renderer.ships_destroyed_in_frame(renderer.turn);		// For the pointer forwards.
 
 			for (let pid in frame.ships) {
 
@@ -999,7 +997,7 @@
 				for (let n = 0; n < map.contention.length; n++) {
 
 					let event = map.contention[n];
-					let planet_string = `<span onclick="select_planet(${event.entity.id})">planet ${event.entity.id}</span>`
+					let planet_string = `<span onclick="select_planet(${event.entity.id})">planet ${event.entity.id}</span>`;
 					let ship_strings = [];
 
 					for (let i = 0; i < event.participants.length; i++) {
