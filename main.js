@@ -9,9 +9,19 @@ const windows = require("./modules/windows");
 // -------------------------------------------------------
 
 electron.app.on("ready", () => {
-	windows.new("renderer", {title: "Chlorine", show: true, width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine_renderer.html")});
-	windows.new("info", {title: "Info", show: false, width: 400, height: 600, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
-	windows.new("events", {title: "Events", show: false, width: 400, height: 800, resizable: true, page: path.join(__dirname, "chlorine_info.html")});
+
+	windows.new("renderer", {
+		title: "Chlorine", show: true, width: 1200, height: 800, resizable: true, page: path.join(__dirname, "chlorine_renderer.html")
+	});
+
+	windows.new("info", {
+		title: "Info", show: false, width: 400, height: 600, resizable: true, page: path.join(__dirname, "chlorine_info.html")
+	});
+
+	windows.new("events", {
+		title: "Events", show: false, width: 400, height: 800, resizable: true, page: path.join(__dirname, "chlorine_info.html")
+	});
+
 	electron.Menu.setApplicationMenu(make_main_menu());
 });
 
@@ -231,35 +241,39 @@ function make_main_menu() {
 
 function about_angle_messages() {
 
+	// There must be a better way to store text without it being
+	// a zillion miles wide. Meh.
+
+	let example = `
+
+    def new_angle_with_message(angle, message):
+        return ((message + 1) * 360) + angle`
+
 	let s = `
-	Want your ships to write messages directly into the
-	game replay? Of course you do!
+Want your ships to write messages directly into the game replay?
+Of course you do! Introducing Chlorine's patented Angle Message
+system! Exploit the redundancy inherent in angles to send messages
+to yourself!
 
-	Introducing Chlorine's patented Angle Message
-	system! Exploit the redundancy inherent in angles
-	to send messages to yourself!
+How it works:
 
-	How it works:
+A Halite angle is an unsigned int16. There are just over 180 ways
+of sending the same angle. Chlorine can interpret ship movements
+with angles over 359 as messages, where each message is a number
+in the range 0..180.
 
-	A Halite angle is an unsigned int16. There are just
-	over 180 ways of sending the same angle.
+To encode:(example)
 
-	Chlorine can interpret ship movements with angles
-	over 359 as messages, where each message is a
-	number in the range 0..180.
+Then use the new angle when sending the ship's thrust to the server.
+Chlorine can show the message in the ship info. You can also edit
+messages.json to display text rather than numbers.`;
 
-	To encode:
+	// Unwrap the string nicely...
 
-	    def new_angle_with_message(angle, message):
-	        return ((message + 1) * 360) + angle
+	s = s.split("\n\n").join("(double-newline)");
+	s = s.split("\n").join(" ");
+	s = s.split("(double-newline)").join("\n\n");
+	s = s.split("(example)").join(example);
 
-	Then use the new angle when sending the ship's
-	thrust to the server.
-
-	Chlorine can show the message in the ship info. You
-	can also edit messages.json to display text rather
-	than numbers.
-	`
-
-	alert(s)
+	alert(s);
 }
