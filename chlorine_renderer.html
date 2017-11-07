@@ -104,6 +104,7 @@
 		renderer.docking_ranges = false;
 		renderer.tails = true;
 		renderer.pointers = false;
+		renderer.deaths = true;
 		renderer.crosshair = true;
 		renderer.precise = false;
 		renderer.angle_messages = true;
@@ -749,7 +750,7 @@
 
 		renderer.draw_events = () => {
 
-			if (renderer.turn === 0) {
+			if (renderer.turn === 0 || renderer.deaths === false) {
 				return;
 			}
 

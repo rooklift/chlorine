@@ -180,6 +180,12 @@ function make_main_menu() {
 					}
 				},
 				{
+					label: "Toggle Deaths",
+					click: () => {
+						windows.send("renderer", "toggle", "deaths");
+					}
+				},
+				{
 					type: "separator"
 				},
 				{
