@@ -431,16 +431,9 @@
 						continue;
 					}
 
-					for (let sid in frame.ships[pid]) {
-
-						if (frame.ships[pid].hasOwnProperty(sid) === false) {
-							continue;
-						}
-
-						if (parseInt(sid, 10) === renderer.tracking_id) {
-							renderer.display_tracked_ship(frame.ships[pid][sid]);
-							return;
-						}
+					if (frame.ships[pid][renderer.tracking_id] !== undefined) {
+						renderer.display_tracked_ship(frame.ships[pid][renderer.tracking_id]);
+						return;
 					}
 				}
 
@@ -453,7 +446,6 @@
 					let planet = frame_planets[n];
 
 					if (planet.id === renderer.tracking_id) {
-
 						renderer.display_tracked_planet(planet);
 						return;
 					}
