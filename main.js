@@ -49,9 +49,14 @@ ipcMain.on("renderer_ready", () => {
 	}
 	if (filename !== "") {
 		windows.send("renderer", "open", filename);
-	} else if (process.argv.length === 2) {						// Or, if exactly 1 arg, assume it's a filename...
+	}
+
+/*
+	else if (process.argv.length === 2) {						// Or, if exactly 1 arg, assume it's a filename. Only good for standalone release.
 		windows.send("renderer", "open", process.argv[1]);
 	}
+*/
+
 });
 
 ipcMain.on("relay", (event, msg) => {
