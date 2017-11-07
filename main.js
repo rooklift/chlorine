@@ -6,6 +6,12 @@ const ipcMain = require("electron").ipcMain;
 const path = require("path");
 const windows = require("./modules/windows");
 
+let about_message = `Chlorine: Replay viewer for Halite 2\n` +
+					`--\n` +
+					`Electron ${process.versions.electron}\n` +
+					`Node ${process.versions.node}\n` +
+					`V8 ${process.versions.v8}`
+
 // -------------------------------------------------------
 
 electron.app.on("ready", () => {
@@ -60,6 +66,18 @@ function make_main_menu() {
 			label: "File",
 			submenu: [
 				{
+					label: "About...",
+					click: () => {
+						alert(about_message);
+					}
+				},
+				{
+					role: "toggledevtools"
+				},
+				{
+					type: "separator"
+				},
+				{
 					label: "Open...",
 					accelerator: "CommandOrControl+O",
 					click: () => {
@@ -106,12 +124,6 @@ function make_main_menu() {
 				{
 					accelerator: "CommandOrControl+Q",
 					role: "quit"
-				},
-				{
-					type: "separator"
-				},
-				{
-					role: "toggledevtools"
 				},
 			]
 		},
