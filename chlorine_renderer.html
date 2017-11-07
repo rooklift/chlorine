@@ -119,6 +119,8 @@
 
 		renderer.open = (filename) => {
 
+			console.log(`Trying to load ${filename}`);
+
 			let was_plain_json = false;
 
 			try {
@@ -144,14 +146,20 @@
 			zstd.decompressFileToStream(filename, loading_stream, (err, result) => {
 				if (err) {
 					alert("Couldn't load this file");
+					console.log("Error 1");
+					console.log(err);
 				}
 				result.on("error", (err) => {
 					alert("Couldn't load this file");
+					console.log("Error 2");
+					console.log(err);
 				});
 				result.on("finish", () => {
 					try {
 						renderer.game = JSON.parse(all_chunks.join(""));
 					} catch(err) {
+						console.log("Error 3");
+						console.log(err);
 						return;
 					}
 					renderer.finish_load(filename);
