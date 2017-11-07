@@ -43,6 +43,8 @@ ipcMain.on("renderer_ready", () => {
 	}
 	if (filename !== "") {
 		windows.send("renderer", "open", filename);
+	} else if (process.argv.length === 2) {						// Or, if exactly 1 arg, assume it's a filename...
+		windows.send("renderer", "open", process.argv[1]);
 	}
 });
 
