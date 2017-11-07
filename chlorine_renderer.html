@@ -296,6 +296,7 @@
 			renderer.tracking_type = "ship";
 			renderer.tracking_id = id;
 			renderer.tracking_turn = renderer.turn;
+			renderer.measure_reset();					// FIXME: should actually measure
 			renderer.draw();
 		};
 
@@ -303,6 +304,7 @@
 			renderer.tracking_type = "planet";
 			renderer.tracking_id = id.toString();		// FIXME: the code below implicitly assumes these things are strings
 			renderer.tracking_turn = renderer.turn;
+			renderer.measure_reset();					// FIXME: should actually measure
 			renderer.draw();
 		};
 
