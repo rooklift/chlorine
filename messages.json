@@ -5,6 +5,7 @@
 	"123":  "assassinate",
 	"150":	"ATC deactivated",
 	"151":  "ATC restricted",
+	"152":  "ATC slowed",
 	"177":  "secret sauce",
 	"178":  "point target",
 	"179":	"docking approach",

@@ -1,8 +1,16 @@
 {
-	"name"    : "Chlorine",
-	"version" : "1.0.3",
-	"main"    : "main.js",
+	"name": "Chlorine",
+	"description": "Replay viewer for Halite 2",
+	"version": "1.0.4",
+	"author": "Fohristiwhirl",
+	"main": "main.js",
 	"dependencies": {
 		"node-zstandard": "1.2.4"
+	},
+	"scripts": {
+		"pack": "electron-builder --dir"
+	},
+	"build": {
+		"asar": false
 	}
 }
