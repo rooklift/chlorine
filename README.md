@@ -18,6 +18,8 @@ npm install electron --save-dev --save-exact
 ./node_modules/.bin/electron .
 ```
 
+Finally, if you're on Windows, and desperate, there's a prebuilt binary in the Releases section, though it's not really adequately tested.
+
 # Other dependencies
 * [node-zstandard](https://www.npmjs.com/package/node-zstandard) (gets installed by `npm install`)
 
