@@ -336,9 +336,10 @@
 			let precision = renderer.precise ? 6 : 2;
 			let owner_string = (planet.owner === null) ? "Unowned" : renderer.game.player_names[planet.owner];
 			let colour = (planet.owner === null) ? "white" : colours[planet.owner];
+			let dock_string = `${planet.docked_ships.length} / ${planet.docking_spots} docked`
 			unitbox.innerHTML = ` Planet ${planet.id} (<span style="color: ${colour}">${owner_string}</span>)`;
 			unitbox.innerHTML += ` &mdash; [ ${planet.x.toFixed(precision)} , ${planet.y.toFixed(precision)} ]`;
-			unitbox.innerHTML += ` &mdash; ${planet.health} health &mdash; ${planet.docking_spots} spots &mdash; ${planet.r.toFixed(precision)} radius`;
+			unitbox.innerHTML += ` &mdash; ${planet.health} health &mdash; ${dock_string} &mdash; ${planet.r.toFixed(precision)} radius`;
 
 			if (renderer.crosshair) {
 				renderer.draw_crosshair(planet);
