@@ -172,61 +172,77 @@ function make_main_menu() {
 			label: "View",
 			submenu: [
 				{
-					label: "Toggle Weapon Ranges",
+					label: "Weapon Ranges",
 					click: () => {
 						windows.send("renderer", "toggle", "weapon_ranges");
-					}
+					},
+					type: "checkbox",
+					checked: false,
 				},
 				{
-					label: "Toggle Docking Ranges",
+					label: "Docking Ranges",
 					click: () => {
 						windows.send("renderer", "toggle", "docking_ranges");
-					}
+					},
+					type: "checkbox",
+					checked: false,
 				},
 				{
 					type: "separator"
 				},
 				{
-					label: "Toggle Tails",
+					label: "Tails",
 					click: () => {
 						windows.send("renderer", "toggle", "tails");
-					}
+					},
+					type: "checkbox",
+					checked: true,
 				},
 				{
-					label: "Toggle Pointers",
+					label: "Pointers",
 					click: () => {
 						windows.send("renderer", "toggle", "pointers");
-					}
+					},
+					type: "checkbox",
+					checked: false,
 				},
 				{
-					label: "Toggle Deaths",
+					label: "Deaths",
 					click: () => {
 						windows.send("renderer", "toggle", "deaths");
-					}
+					},
+					type: "checkbox",
+					checked: true,
 				},
 				{
 					type: "separator"
 				},
 				{
-					label: "Toggle Selection Crosshair",
+					label: "Selection Crosshair",
 					click: () => {
 						windows.send("renderer", "toggle", "crosshair");
-					}
+					},
+					type: "checkbox",
+					checked: true,
 				},
 				{
-					label: "Toggle High Precision Coordinates",
+					label: "High Precision Coordinates",
 					click: () => {
 						windows.send("renderer", "toggle", "precise");
-					}
+					},
+					type: "checkbox",
+					checked: false,
 				},
 				{
 					type: "separator"
 				},
 				{
-					label: "Toggle Angle Message Interpretation",		// Consider angles >= 360 as encoding a number...
+					label: "Angle Message Interpretation",		// Consider angles >= 360 as encoding a number...
 					click: () => {
 						windows.send("renderer", "toggle", "angle_messages");
-					}
+					},
+					type: "checkbox",
+					checked: true,
 				},
 				{
 					label: "About Angle Messages...",
