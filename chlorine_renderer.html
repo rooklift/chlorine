@@ -856,12 +856,17 @@
 					colour = "#999999";
 				}
 
+				let total_colour = colours[n];
+				if (ship_count === 0 && planet_count[n] === 0) {
+					total_colour = "white";
+				}
+
 				lines.push(`<h2 style="color: ${colour}">${renderer.game.player_names[n]} (${rank})</h2>`);
 
 				lines.push(`<ul>`);
 				lines.push(`<li>Planets: ${planet_count[n]}</li>`);
 				lines.push(`<li>Ships: ${ship_count}</li>`);
-				lines.push(`<li>Total ships: ${renderer.spawn_counts[n][renderer.turn]}</li>`);
+				lines.push(`<li>Total ships: <span style="color:${total_colour}">${renderer.spawn_counts[n][renderer.turn]}</span></li>`);
 				lines.push(`</ul>`);
 
 			}
