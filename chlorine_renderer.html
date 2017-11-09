@@ -838,6 +838,12 @@
 				lines.push(`<p>${renderer.game.width} x ${renderer.game.height} (seed ${renderer.game.seed})</p>`);
 			}
 
+			if (renderer.game.engine_version !== undefined) {
+				lines.push(`<p>Engine: ${renderer.game.engine_version}</p>`);
+			} else {
+				lines.push(`<p>Engine: no version specified</p>`);
+			}
+
 			for (let n = 0; n < renderer.game.num_players; n++) {
 
 				let rank = ranks[renderer.game.stats[n].rank];
