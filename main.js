@@ -21,7 +21,7 @@ electron.app.on("ready", () => {
 	});
 
 	windows.new("info", {
-		title: "Info", show: false, width: 400, height: 600, resizable: true, page: path.join(__dirname, "chlorine_info.html")
+		title: "Info", show: false, width: 400, height: 800, resizable: true, page: path.join(__dirname, "chlorine_info.html")
 	});
 
 	windows.new("events", {

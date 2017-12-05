@@ -846,7 +846,23 @@
 
 			for (let n = 0; n < renderer.game.num_players; n++) {
 
-				let rank = ranks[renderer.game.stats[n].rank];
+				let rank = "??";
+				let afrt = "??";
+				let mfrt = "??";
+
+				let stats = renderer.game.stats;
+
+				if (stats) {
+					rank = ranks[stats[n].rank];
+
+					if (stats[n].average_frame_response_time) {
+						afrt = stats[n].average_frame_response_time.toFixed(0);
+					}
+
+					if (stats[n].max_frame_response_time) {
+						mfrt = stats[n].max_frame_response_time;
+					}
+				}
 
 				let ships = frame.ships[n];
 				let ship_count = Object.keys(ships).length;
@@ -864,6 +880,10 @@
 				lines.push(`<li>Planets: ${planet_count[n]}</li>`);
 				lines.push(`<li>Ships: ${ship_count}</li>`);
 				lines.push(`<li>Total ships: <span style="color:${colour}">${renderer.spawn_counts[n][renderer.turn]}</span></li>`);
+				lines.push(`</ul>`);
+				lines.push(`<br>`);
+				lines.push(`<ul>`);
+				lines.push(`<li>Latency (mean, max): ${afrt} / ${mfrt}</li>`);
 				lines.push(`</ul>`);
 
 			}
