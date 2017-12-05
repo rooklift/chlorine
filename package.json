@@ -1,7 +1,7 @@
 {
 	"name": "Chlorine",
 	"description": "Replay viewer for Halite 2",
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"author": "Fohristiwhirl",
 	"main": "main.js",
 	"dependencies": {
