@@ -855,11 +855,11 @@
 				if (stats) {
 					rank = ranks[stats[n].rank];
 
-					if (stats[n].average_frame_response_time) {
+					if (stats[n].average_frame_response_time !== undefined) {
 						afrt = stats[n].average_frame_response_time.toFixed(0);
 					}
 
-					if (stats[n].max_frame_response_time) {
+					if (stats[n].max_frame_response_time !== undefined) {
 						mfrt = stats[n].max_frame_response_time;
 					}
 				}
