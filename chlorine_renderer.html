@@ -25,7 +25,8 @@
 
 <table style="width: calc(100% - 20px);" id="info_line"><tr>
 	<td id="unitbox">Starting up...</td>
-	<td align="right" id="measurebox"></span></td>
+	<td align="right" id="measurebox"></td>
+	<td align="right" id="turnbox"></td>
 </tr></table>
 <canvas id="canvas" width="0" height="0"></canvas>
 
@@ -48,6 +49,7 @@
 	const info_line = document.getElementById("info_line");
 	const unitbox = document.getElementById("unitbox");
 	const measurebox = document.getElementById("measurebox");
+	const turnbox = document.getElementById("turnbox");
 	const canvas = document.getElementById("canvas");
 	const context = canvas.getContext("2d");
 
@@ -327,6 +329,7 @@
 
 			let turn_string = `${renderer.turn} / ${renderer.game.frames.length - 1}`;
 			document.title = turn_string + " --- " + renderer.game.player_names.join(" / ");
+			turnbox.innerHTML = turn_string;
 
 			renderer.send_info();
 			renderer.send_events();
