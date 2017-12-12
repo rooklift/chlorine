@@ -354,7 +354,7 @@
 			let owner_string = renderer.game.player_names[ship.owner];
 			let colour = colours[ship.owner];
 			unitbox.innerHTML = `Ship ${ship.id} (<span style="color: ${colour}">${owner_string}</span>)`;
-			unitbox.innerHTML += ` &mdash; [ ${ship.x.toFixed(precision)} , ${ship.y.toFixed(precision)} ] &mdash; ${ship.health} health`;
+			unitbox.innerHTML += ` &mdash; [ ${ship.x.toFixed(precision)} , ${ship.y.toFixed(precision)} ] &mdash; ${ship.health} hp`;
 			if (ship.docking.status !== "undocked") {
 				unitbox.innerHTML += ` &mdash; <span style="color: ${colour}">${ship.docking.status}</span>`;
 			} else {
