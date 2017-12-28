@@ -176,8 +176,75 @@
 			renderer.tracking_type = null;
 			unitbox.innerHTML = "No selection.";
 			renderer.count_spawns();
+			renderer.count_self_collisions();
 			renderer.draw();
 		};
+
+		renderer.count_self_collisions = () => {
+
+			renderer.self_collision_counts = [];
+
+			// We make an array of dimension <players> * <turns> to
+			// hold how many times a player crashed their own ships together.
+
+			for (let p = 0; p < renderer.game.num_players; p++) {
+				renderer.self_collision_counts.push([0]);
+			}
+
+			for (let n = 0; n < renderer.game.frames.length; n++) {
+
+				for (let p = 0; p < renderer.self_collision_counts.length; p++) {
+					renderer.self_collision_counts[p].push(renderer.self_collision_counts[p][n]);
+				}
+
+				let map = renderer.events_map(n);
+
+				if (map.destroyed) {
+
+					let destructions_by_time = {};
+
+					for (let n = 0; n < map.destroyed.length; n++) {
+
+						let event = map.destroyed[n];
+
+						if (event.time !== 0) {
+							if (destructions_by_time[event.time] === undefined) {
+								destructions_by_time[event.time] = [];
+							}
+							destructions_by_time[event.time].push(event);
+						}
+					}
+
+					for (let t in destructions_by_time) {
+
+						if (destructions_by_time.hasOwnProperty(t) === false) {
+							continue;
+						}
+
+						for (let a = 0; a < destructions_by_time[t].length; a++) {
+
+							for (let b = a + 1; b < destructions_by_time[t].length; b++) {
+
+								let x1 = destructions_by_time[t][a].x;
+								let y1 = destructions_by_time[t][a].y;
+								let x2 = destructions_by_time[t][b].x;
+								let y2 = destructions_by_time[t][b].y;
+
+								if (dist(x1, y1, x2, y2) <= 1.001) {		// I've seen slightly > 1
+
+									if (destructions_by_time[t][a].entity.owner === destructions_by_time[t][b].entity.owner) {
+
+										let p = destructions_by_time[t][a].entity.owner;
+										renderer.self_collision_counts[p][n + 1] += 1;
+
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 		renderer.count_spawns = () => {
 
@@ -882,6 +949,7 @@
 				lines.push(`<ul style="color: ${list_colour}">`);
 				lines.push(`<li>Planets: ${planet_count[n]}</li>`);
 				lines.push(`<li>Ships: ${ship_count}</li>`);
+				lines.push(`<li>Self Collisions: ${renderer.self_collision_counts[n][renderer.turn]}</span></li>`);
 				lines.push(`<li>Total ships: <span style="color:${colour}">${renderer.spawn_counts[n][renderer.turn]}</span></li>`);
 				lines.push(`</ul>`);
 				lines.push(`<br>`);
@@ -898,9 +966,9 @@
 			});
 		};
 
-		renderer.send_events = () => {
+		renderer.events_map = (turn) => {
 
-			let frame = renderer.game.frames[renderer.turn];
+			let frame = renderer.game.frames[turn];
 			let events = frame.events;
 
 			if (events === undefined) {
@@ -916,6 +984,13 @@
 				}
 				map[event.event].push(event);
 			}
+
+			return map;
+		}
+
+		renderer.send_events = () => {
+
+			let map = renderer.events_map(renderer.turn);
 
 			let lines = [];
 
