@@ -39,7 +39,6 @@
 	const ranks = ["..", "1st", "2nd", "3rd", "4th"];
 
 	const PLANET_LINE_THICKNESS = 4;
-	const CAMERA_SPEED = 3;
 
 	const alert = require("./modules/alert");
 	const fs = require("fs");
@@ -249,7 +248,7 @@
 					}
 				}
 			}
-		}
+		};
 
 		renderer.count_spawns = () => {
 
@@ -1003,7 +1002,7 @@
 			}
 
 			return map;
-		}
+		};
 
 		renderer.send_events = () => {
 
