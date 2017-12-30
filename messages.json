@@ -7,6 +7,7 @@
 	"151":  "ATC restricted",
 	"152":  "ATC slowed",
 	"160":  "cowardice",
+	"174":  "dock target",
 	"175":  "recursion depth exceeded",
 	"176":  "executed plan but had no plan",
 	"177":  "secret sauce",
