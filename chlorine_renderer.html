@@ -612,7 +612,7 @@
 				}
 			}
 
-			if (best_distance < 5) {
+			if (best_distance < 5 / renderer.cameraZoom) {
 				renderer.tracking_type = "ship";
 				renderer.tracking_id = best_ship.id;
 				renderer.tracking_turn = renderer.turn;
