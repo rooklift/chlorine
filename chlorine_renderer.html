@@ -99,7 +99,6 @@
 		renderer.tracking_type = null;
 		renderer.tracking_id = -1;
 		renderer.tracking_turn = -1;
-		renderer.dragging = false;
 
 		renderer.spawn_counts = null;
 
@@ -111,9 +110,11 @@
 		renderer.crosshair = true;
 		renderer.precise = false;
 		renderer.angle_messages = true;
+
+		renderer.dragging = false;
 		renderer.cameraZoom = 1.0;
-		renderer.cameraPosition = [ 0, 0 ];
-		renderer.dragStartCameraPosition = [ 0, 0 ];
+		renderer.cameraPosition = [0, 0];
+		renderer.dragStartCameraPosition = [0, 0];
 
 		renderer.measure_entity = null;
 
@@ -631,7 +632,14 @@
 		renderer.scroll = (event) => {
 			renderer.cameraZoom += event.wheelDelta / 720.0;
 			renderer.cameraZoom = Math.max(1, Math.min(renderer.cameraZoom, 7));
+			renderer.draw();
+		};
 
+		renderer.scroll_reset = () => {
+			renderer.dragging = false;
+			renderer.cameraZoom = 1.0;
+			renderer.cameraPosition = [0, 0];
+			renderer.dragStartCameraPosition = [0, 0];
 			renderer.draw();
 		};
 
@@ -1223,6 +1231,10 @@
 		renderer.select_planet(id);
 	});
 
+	ipcRenderer.on("reset_zoom", () => {
+		renderer.scroll_reset();
+	});
+
 	window.addEventListener("resize", () => renderer.draw());
 
 	canvas.addEventListener("mousedown", (event) => {
@@ -1248,7 +1260,7 @@
 
 	canvas.addEventListener("mousemove", (event) => {
 		event.preventDefault();
-		if(renderer.dragging){
+		if (renderer.dragging) {
 			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height) * renderer.cameraZoom;
 
 			renderer.cameraPosition[0] = renderer.dragStartCameraPosition[0] + (renderer.dragStart[0] - (event.offsetX / scale + renderer.cameraPosition[0]));
@@ -1268,7 +1280,6 @@
 	});
 
 	// Setup drag-and-drop...
-
 
 	window.ondragover = () => false;
 	window.ondragleave = () => false;

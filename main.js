@@ -153,14 +153,14 @@ function make_main_menu() {
 					type: "separator"
 				},
 				{
-					label: "Move To Start",
+					label: "Move to Start",
 					accelerator: "Home",
 					click: () => {
 						windows.send("renderer", "forward", -99999);
 					}
 				},
 				{
-					label: "Move To End",
+					label: "Move to End",
 					accelerator: "End",
 					click: () => {
 						windows.send("renderer", "forward", 99999);
@@ -171,6 +171,15 @@ function make_main_menu() {
 		{
 			label: "View",
 			submenu: [
+				{
+					label: "Reset Zoom / Scroll",
+					click: () => {
+						windows.send("renderer", "reset_zoom", null);
+					}
+				},
+				{
+					type: "separator"
+				},
 				{
 					label: "Weapon Ranges",
 					click: () => {
