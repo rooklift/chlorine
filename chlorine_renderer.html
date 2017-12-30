@@ -629,7 +629,7 @@
 		};
 
 		renderer.scroll = (event) => {
-			renderer.cameraZoom += event.wheelDelta / 120.0;
+			renderer.cameraZoom += event.wheelDelta / 720.0;
 			renderer.cameraZoom = Math.max(1, Math.min(renderer.cameraZoom, 7));
 
 			renderer.draw();
