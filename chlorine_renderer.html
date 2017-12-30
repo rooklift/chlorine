@@ -365,7 +365,7 @@
 			renderer[varname] = !renderer[varname];
 			renderer.draw();
 		};
-		
+
 		renderer.select_ship = (id) => {
 			renderer.tracking_type = "ship";
 			renderer.tracking_id = id;
@@ -390,7 +390,7 @@
 			if (!renderer.game) {
 				return;
 			}
-			
+
 			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height) * renderer.cameraZoom;
 
 			context.clearRect(0, 0, canvas.width, canvas.height);
@@ -409,7 +409,7 @@
 
 			renderer.send_info();
 			renderer.send_events();
-			
+
 			context.restore();
 		};
 
@@ -628,14 +628,14 @@
 			renderer.measure_reset();
 			renderer.draw();
 		};
-		
+
 		renderer.scroll = (event) => {
 			renderer.cameraZoom += event.wheelDelta / 120.0;
 			renderer.cameraZoom = Math.max(1, Math.min(renderer.cameraZoom, 7));
-			
+
 			renderer.draw();
 		};
-		
+
 		renderer.ships_destroyed_in_frame = (i) => {		// returns a map of ship id --> destruction point
 
 			let ret = Object.create(null);
@@ -1228,20 +1228,25 @@
 
 	canvas.addEventListener("mousedown", (event) => {
 		event.preventDefault();
-		
+
 		let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height) * renderer.cameraZoom;
 		renderer.dragging = true;
 		renderer.dragStart = [ event.offsetX / scale + renderer.cameraPosition[0], event.offsetY / scale + renderer.cameraPosition[1] ];
 		renderer.dragStartCameraPosition = renderer.cameraPosition;
-		
+
 		renderer.click(event);
 	});
-	
+
 	canvas.addEventListener("mouseup", (event) => {
 		event.preventDefault();
 		renderer.dragging = false;
 	});
-	
+
+	canvas.addEventListener("mouseout", (event) => {
+		event.preventDefault();
+		renderer.dragging = false;
+	});
+
 	canvas.addEventListener("mousemove", (event) => {
 		event.preventDefault();
 		if(renderer.dragging){
@@ -1249,7 +1254,7 @@
 
 			renderer.cameraPosition[0] = renderer.dragStartCameraPosition[0] + (renderer.dragStart[0] - (event.offsetX / scale + renderer.cameraPosition[0]));
 			renderer.cameraPosition[1] = renderer.dragStartCameraPosition[1] + (renderer.dragStart[1] - (event.offsetY / scale + renderer.cameraPosition[1]));
-			
+
 			// TODO Find the correct maximum values
 			renderer.cameraPosition[0] = Math.max(0, Math.min(renderer.game.width, renderer.cameraPosition[0]));
 			renderer.cameraPosition[1] = Math.max(0, Math.min(renderer.game.height, renderer.cameraPosition[1]));
@@ -1257,12 +1262,12 @@
 			renderer.draw();
 		}
 	});
-	
+
 	canvas.addEventListener("mousewheel", (event) => {
 		event.preventDefault();
 		renderer.scroll(event);
 	});
-	
+
 	// Setup drag-and-drop...
 
 
