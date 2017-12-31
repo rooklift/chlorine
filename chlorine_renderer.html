@@ -212,12 +212,10 @@
 
 						let event = map.destroyed[n];
 
-						if (event.time !== 0) {
-							if (destructions_by_time[event.time] === undefined) {
-								destructions_by_time[event.time] = [];
-							}
-							destructions_by_time[event.time].push(event);
+						if (destructions_by_time[event.time] === undefined) {
+							destructions_by_time[event.time] = [];
 						}
+						destructions_by_time[event.time].push(event);
 					}
 
 					for (let t in destructions_by_time) {
