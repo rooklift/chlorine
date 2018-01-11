@@ -166,6 +166,16 @@ function make_main_menu() {
 						windows.send("renderer", "forward", 99999);
 					}
 				},
+				{
+					type: "separator"
+				},
+				{
+					label: "Go To Next Event",
+					accelerator: "Enter",
+					click: () => {
+						windows.send("renderer", "go_to_next_event", null);
+					}
+				},
 			]
 		},
 		{
@@ -173,6 +183,7 @@ function make_main_menu() {
 			submenu: [
 				{
 					label: "Reset Zoom / Scroll",
+					accelerator: "1",
 					click: () => {
 						windows.send("renderer", "reset_zoom", null);
 					}
@@ -195,6 +206,17 @@ function make_main_menu() {
 					},
 					type: "checkbox",
 					checked: false,
+				},
+				{
+					type: "separator"
+				},
+				{
+					label: "Planets",
+					click: () => {
+						windows.send("renderer", "toggle", "show_planets");
+					},
+					type: "checkbox",
+					checked: true,
 				},
 				{
 					type: "separator"

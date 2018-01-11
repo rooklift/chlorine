@@ -104,6 +104,7 @@
 
 		renderer.weapon_ranges = false;
 		renderer.docking_ranges = false;
+		renderer.show_planets = true;
 		renderer.tails = true;
 		renderer.pointers = false;
 		renderer.deaths = true;
@@ -354,6 +355,29 @@
 
 			if (renderer.turn >= renderer.game.frames.length) {
 				renderer.turn = renderer.game.frames.length - 1;
+			}
+
+			renderer.draw();
+		};
+
+		renderer.go_to_next_event = () => {
+
+			renderer.measure_reset();
+
+			while (1) {
+
+				renderer.turn++
+
+				if (renderer.turn >= renderer.game.frames.length) {
+					renderer.turn = renderer.game.frames.length - 1;
+					break;
+				}
+
+				if (renderer.game.frames[renderer.turn]["events"] !== undefined) {
+					if (renderer.game.frames[renderer.turn]["events"].length > 0) {
+						break;
+					}
+				}
 			}
 
 			renderer.draw();
@@ -705,6 +729,10 @@
 
 		renderer.draw_planets = () => {
 
+			if (renderer.show_planets === false) {
+				return;
+			}
+
 			let scale = Math.min(canvas.width / renderer.game.width, canvas.height / renderer.game.height) * renderer.cameraZoom;
 
 			let frame_planets = renderer.current_planets();
@@ -959,6 +987,17 @@
 				let ships = frame.ships[n];
 				let ship_count = Object.keys(ships).length;
 
+				let undocked_count = 0;
+				for (let ship_id in ships) {
+					if (ships.hasOwnProperty(ship_id) === false) {
+						continue;
+					}
+					let ship = ships[ship_id];
+					if (ship.docking.status === "undocked") {
+						undocked_count++;
+					}
+				}
+
 				let colour = colours[n];
 				let list_colour = "white";
 				if (ship_count === 0 && planet_count[n] === 0) {
@@ -970,7 +1009,7 @@
 
 				lines.push(`<ul style="color: ${list_colour}">`);
 				lines.push(`<li>Planets: ${planet_count[n]}</li>`);
-				lines.push(`<li>Ships: ${ship_count}</li>`);
+				lines.push(`<li>Ships: ${ship_count} (${undocked_count})</li>`);
 				lines.push(`<li>Self collisions: ${renderer.self_collision_counts[n][renderer.turn]}</span></li>`);
 				lines.push(`<li>Total ships: <span style="color:${colour}">${renderer.spawn_counts[n][renderer.turn]}</span></li>`);
 				lines.push(`</ul>`);
@@ -1215,6 +1254,10 @@
 
 	ipcRenderer.on("forward", (event, n) => {
 		renderer.forward(n);
+	});
+
+	ipcRenderer.on("go_to_next_event", () => {
+		renderer.go_to_next_event();
 	});
 
 	ipcRenderer.on("toggle", (event, varname) => {
