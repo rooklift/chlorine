@@ -25,7 +25,7 @@ Finally, if you're on Windows, and desperate, there's a prebuilt binary in the [
 
 # Usage
 
-Open a file from the menu, or via command line with `electron . -o filename.hlt`. Drag-and-dropping a file onto the window may also work. Once a file is opened, navigate with left and right arrow keys. (Todo: autoplay.)
+Open a file from the menu, or via command line with `electron . -o filename.hlt`. Drag-and-dropping a file onto the window may also work. Once a file is opened, navigate with left and right arrow keys.
 
 # Screenshot
 ![Chlorine Screenshot](https://raw.githubusercontent.com/fohristiwhirl/chlorine/master/screenshot.png)
