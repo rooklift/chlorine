@@ -953,9 +953,9 @@
 
 			if (renderer.buggy) {
 				let bug_notice = `<span style="color: #ff3333;">velocity bug seen</span>`;
-				lines.push(`<p>${renderer.game.width} x ${renderer.game.height} (seed ${renderer.game.seed}) &nbsp; ${bug_notice}</p>`);
+				lines.push(`<p>-d "${renderer.game.width} ${renderer.game.height}" -s ${renderer.game.seed} &nbsp; ${bug_notice}</p>`);
 			} else {
-				lines.push(`<p>${renderer.game.width} x ${renderer.game.height} (seed ${renderer.game.seed})</p>`);
+				lines.push(`<p>-d "${renderer.game.width} ${renderer.game.height}" -s ${renderer.game.seed}</p>`);
 			}
 
 			if (renderer.game.engine_version !== undefined) {
