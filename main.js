@@ -183,7 +183,7 @@ function make_main_menu() {
 			submenu: [
 				{
 					label: "Reset Zoom / Scroll",
-					accelerator: "1",
+					accelerator: "F1",
 					click: () => {
 						windows.send("renderer", "reset_zoom", null);
 					}
@@ -198,6 +198,47 @@ function make_main_menu() {
 					},
 					type: "checkbox",
 					checked: false,
+				},
+				{
+					label: "Tactical Ranges (13)",
+					submenu: [
+						{
+							label: "Pink",
+							accelerator: "1",
+							click: () => {
+								windows.send("renderer", "toggle", "tactical_ranges_0");
+							},
+							type: "checkbox",
+							checked: false,
+						},
+						{
+							label: "Blue",
+							accelerator: "2",
+							click: () => {
+								windows.send("renderer", "toggle", "tactical_ranges_1");
+							},
+							type: "checkbox",
+							checked: false,
+						},
+						{
+							label: "Yellow",
+							accelerator: "3",
+							click: () => {
+								windows.send("renderer", "toggle", "tactical_ranges_2");
+							},
+							type: "checkbox",
+							checked: false,
+						},
+						{
+							label: "Green",
+							accelerator: "4",
+							click: () => {
+								windows.send("renderer", "toggle", "tactical_ranges_3");
+							},
+							type: "checkbox",
+							checked: false,
+						},
+					]
 				},
 				{
 					label: "Docking Ranges",
@@ -223,6 +264,7 @@ function make_main_menu() {
 				},
 				{
 					label: "Tails",
+					accelerator: "T",
 					click: () => {
 						windows.send("renderer", "toggle", "tails");
 					},
@@ -231,6 +273,7 @@ function make_main_menu() {
 				},
 				{
 					label: "Pointers",
+					accelerator: "P",
 					click: () => {
 						windows.send("renderer", "toggle", "pointers");
 					},

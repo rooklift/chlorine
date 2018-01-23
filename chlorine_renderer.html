@@ -103,6 +103,10 @@
 		renderer.spawn_counts = null;
 
 		renderer.weapon_ranges = false;
+		renderer.tactical_ranges_0 = false;
+		renderer.tactical_ranges_1 = false;
+		renderer.tactical_ranges_2 = false;
+		renderer.tactical_ranges_3 = false;
 		renderer.docking_ranges = false;
 		renderer.show_planets = true;
 		renderer.tails = true;
@@ -455,7 +459,7 @@
 			let colour = colours[ship.owner];
 			unitbox.innerHTML = `Ship ${ship.id} (<span style="color: ${colour}">${owner_string}</span>)`;
 			unitbox.innerHTML += ` &mdash; [ ${ship.x.toFixed(precision)} , ${ship.y.toFixed(precision)} ] &mdash; ${ship.health} hp`;
-			if (ship.docking.status !== "undocked") {
+			if (ship.docking.status !== "undocked" && !(ship.docking.status === "undocking" && ship.docking.turns_left === 1)) {
 				unitbox.innerHTML += ` &mdash; <span style="color: ${colour}">${ship.docking.status}</span>`;
 			} else {
 				let moves = renderer.game.moves[renderer.turn];
@@ -720,6 +724,7 @@
 				pl.docked_ships = frame.planets[plid].docked_ships;
 				pl.health = frame.planets[plid].health;
 				pl.owner = frame.planets[plid].owner;
+				pl.current_production = frame.planets[plid].current_production;
 
 				ret.push(pl);
 			}
@@ -801,6 +806,8 @@
 					continue;
 				}
 
+				let tactical_ranges = renderer[`tactical_ranges_${pid}`];
+
 				for (let sid in frame.ships[pid]) {
 
 					if (frame.ships[pid].hasOwnProperty(sid) === false) {
@@ -829,6 +836,14 @@
 						context.lineWidth = 1;
 						context.beginPath();
 						context.arc(x, y, (renderer.game.constants.WEAPON_RADIUS + renderer.game.constants.SHIP_RADIUS) * scale, 0, Math.PI * 2, true);
+						context.stroke();
+					}
+
+					if (tactical_ranges && ship.docking.status === "undocked") {
+						context.strokeStyle = colours[parseInt(pid, 10)];
+						context.lineWidth = 1;
+						context.beginPath();
+						context.arc(x, y, 13 * scale, 0, Math.PI * 2, true);
 						context.stroke();
 					}
 
