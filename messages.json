@@ -1,25 +1,55 @@
-{
-	"info":	"You can put message lookups in this file for the Angle Message parser. The ones here are what I'm using, but you can replace everything.",
-	"121":	"attack docked",
-	"122":	"orbit fight",
-	"123":  "assassinate",
-	"150":	"ATC deactivated",
-	"151":  "ATC restricted",
-	"152":  "ATC slowed",
-	"160":  "cowardice",
-	"161":  "retreat failed",
-	"165":  "planet, locked",
-	"166":  "ship, locked",
-	"167":  "point, locked",
-	"168":  "port, locked",
-	"170":  "ship, locked, fearless",
-	"172":	"global sauce",
-	"173":  "genetic algorithm - cautious",
-	"174":  "port target",
-	"175":  "recursion depth exceeded",
-	"176":  "executed plan but had no plan",
-	"177":  "genetic algorithm - aggro",
-	"178":  "point target",
-	"179":	"docking approach",
-	"180":	"no target"
-}
+[
+	{
+		"name": "fohristiwhirl",
+
+		"121": "attack docked",
+		"122": "orbit fight",
+		"123": "assassinate",
+		"150": "ATC deactivated",
+		"151": "ATC restricted",
+		"152": "ATC slowed",
+		"160": "cowardice",
+		"161": "retreat failed",
+		"165": "planet, locked",
+		"166": "ship, locked",
+		"167": "point, locked",
+		"168": "port, locked",
+		"170": "ship, locked, fearless",
+		"172": "global sauce",
+		"173": "genetic algorithm - cautious",
+		"174": "port target",
+		"175": "recursion depth exceeded",
+		"176": "executed plan but had no plan",
+		"177": "genetic algorithm - aggro",
+		"178": "point target",
+		"179": "docking approach",
+		"180": "no target"
+	},
+
+	{
+		"name": "lemonade",
+
+		"71": "DockTask",
+		"72": "AttackDockedEnemyTask",
+		"73": "AttackEnemyTask",
+		"74": "DefendDockedShipTask",
+		"75": "WanderTask",
+		"91": "AbandonTask",
+		"92": "FindEnemyTask",
+		"93": "LureEnemyTask",
+		"94": "RushTask",
+		"113": "FindProjectedDockedEnemyTask"
+	},
+
+	{
+		"name": "mlomb",
+
+		"0": "NOTHING",
+		"1": "SUICIDE",
+		"2": "ATTACK",
+		"3": "WRITE",
+		"4": "DEFEND",
+		"5": "ESCAPE",
+		"6": "DOCK"
+	}
+]

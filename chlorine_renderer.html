@@ -124,9 +124,9 @@
 		renderer.measure_entity = null;
 
 		try {
-			renderer.message_lookup = JSON.parse(fs.readFileSync("messages.json"));
+			renderer.message_lookups = JSON.parse(fs.readFileSync("messages.json"));
 		} catch(err) {
-			renderer.message_lookup = Object.create(null);
+			renderer.message_lookups = [];
 		}
 
 		renderer.open = (filename) => {
@@ -472,10 +472,20 @@
 							let angle_string = angle.toString();
 							if (renderer.angle_messages && angle >= 360) {
 								let message = Math.floor(angle / 360) - 1;
-								if (renderer.message_lookup[message] !== undefined) {
-									message = `"${renderer.message_lookup[message]}"`;
+								angle_string = `${angle % 360} (msg: ${message})`;				// Just show number, if not in file.
+								for (let n = 0; n < renderer.message_lookups.length; n++) {
+									let lookups = renderer.message_lookups[n];
+									if (lookups["name"] === undefined) {
+										continue;
+									}
+									if (owner_string.toLowerCase().indexOf(lookups["name"].toLowerCase()) !== -1) {
+										if (lookups[message.toString()] !== undefined) {
+											message = `"${lookups[message.toString()]}"`;
+											angle_string = `${angle % 360} (msg: ${message})`;
+											break;
+										}
+									}
 								}
-								angle_string = `${angle % 360} (msg: ${message})`;
 							}
 							unitbox.innerHTML += ` &mdash; next: <span style="color: ${colour}">thrust ${speed} / ${angle_string}</span>`;
 						} else {
