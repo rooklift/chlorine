@@ -51,5 +51,34 @@
 		"4": "DEFEND",
 		"5": "ESCAPE",
 		"6": "DOCK"
+	},
+
+	{
+		"name": "Prisoner3D",
+
+		"1": "Flee",
+		"2": "Flee and Panic",
+		"3": "Run",
+		"4": "Evil",
+		"5": "Group",
+		"6": "GoThru",
+		"7": "Prick",
+		"8": "PrickNear",
+		"9": "Panic",
+		"10": "Defending",
+		"11": "Docking",
+		"12": "Attacking Defending",
+		"15": "Hide",
+		"51": "Squad can beat docked ships",
+		"52": "Possibly could be distraction",
+		"53": "Precaution - Defending",
+		"54": "Regular squad combat",
+		"55": "Leading on",
+		"56": "Using meat shield as support",
+		"57": "Combat by going to ally new pos",
+		"58": "No ships around to defend attack",
+		"69": "Fleeing to ally new pos",
+		"70": "Unable to flee to ally new pos, using Flee",
+		"99": "CHEESE"
 	}
 ]
