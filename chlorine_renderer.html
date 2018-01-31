@@ -43,6 +43,7 @@
 	const alert = require("./modules/alert");
 	const fs = require("fs");
 	const ipcRenderer = require("electron").ipcRenderer;
+	const path = require("path");
 	const stream = require("stream");
 	const zstd = require("node-zstandard");
 
@@ -124,7 +125,7 @@
 		renderer.measure_entity = null;
 
 		try {
-			renderer.message_lookups = JSON.parse(fs.readFileSync("messages.json"));
+			renderer.message_lookups = JSON.parse(fs.readFileSync(path.join(__dirname, "messages.json")));
 		} catch(err) {
 			renderer.message_lookups = [];
 		}
