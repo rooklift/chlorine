@@ -18,7 +18,7 @@ npm install electron --save-dev --save-exact
 ./node_modules/.bin/electron .
 ```
 
-Finally, if you're on Windows, and desperate, there's a prebuilt binary in the [Releases](https://github.com/fohristiwhirl/chlorine/releases) section, though it's not really adequately tested. (For one thing, it uses an older version of Electron.)
+Finally, if you're on Windows, there's a prebuilt binary in the [Releases](https://github.com/fohristiwhirl/chlorine/releases) section.
 
 # Other dependencies
 * [node-zstandard](https://www.npmjs.com/package/node-zstandard) (gets installed by `npm install`)
