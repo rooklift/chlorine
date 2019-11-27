@@ -1365,8 +1365,23 @@
 	window.ondragend = () => false;
 	window.ondrop = (event) => {
 		event.preventDefault();
-		renderer.open(event.dataTransfer.files[0].path);
-		return false;
+        if(event.dataTransfer.files.length>0) {
+		    renderer.open(event.dataTransfer.files[0].path);
+		    return false;
+        } else {
+            let link = event.dataTransfer.getData("text/uri-list");
+            let game_id = link.substr(link.search("game_id=")+8,link.length);
+            let game_url = "https://api.halite.io/v1/api/user/1157/match/" + game_id + "/replay"
+            var filename = "games/" + game_id + ".hlt";
+            var file = require('fs').createWriteStream(filename);
+            file.on('finish', function() {
+                file.close();
+                renderer.open(filename);
+            });
+            var request = require('https').get(game_url, function(response) {
+                response.pipe(file);
+            });
+        }
 	};
 
 	canvas.width = window.innerWidth;
