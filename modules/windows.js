@@ -31,7 +31,8 @@ exports.new = (token, params = {}) => {		// token is an internal name for us to 
 		resizable: params.resizable,
 		webPreferences: {
 			zoomFactor: zoom_factor,
-			nodeIntegration: true
+			nodeIntegration: true,
+			contextIsolation: false
 		}
 	});
 
